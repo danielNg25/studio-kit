@@ -1,0 +1,5 @@
+provider: vbee
+voice_id: ${VBEE_VOICE}     # read from .env
+speed: 1.1
+# pauses: lấy theo format (short-60 / long-8min). Chỉ ghi đè khi thật cần, vd {sentence: 0.4}
+pronounce: {}                # written form -> spoken form, e.g. {Farallon: Pha-ra-lông}

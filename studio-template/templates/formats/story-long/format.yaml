@@ -1,0 +1,47 @@
+# Story compilation, horizontal 16:9 — YouTube, 2–4 true stories per video, each story = one chapter (stickhead-v1 / stick_history).
+# 2026-10-06: the channel is ENGLISH (ElevenLabs) → chars_per_second + budget re-set for English narration.
+# Measured on the reference (Serious History, 4 videos): 16–29 min, 3–5 stories, narration covers 91–94 % of the time
+# (almost no silence), average shot 3.3–5.2 s, 24 fps, no subtitles, no stickers. We aim at 8:30–15:00 to start
+# (≥ 8:00 so mid-roll ads are allowed: https://support.google.com/youtube/answer/6175006), 2–3 stories.
+id: story-long
+size: [1920, 1080]
+fps: 24
+duration_s: [510, 900]
+pauses: {sentence: 0.25, line: 0.3, shot: 0.3, chapter: 1.2}   # tight: the reference talks over 90 % of the time; chapter = the pause before a story title
+chars_per_second: 16          # English TTS ≈ 165–175 wpm at speed 1.05 (≈ 5.8 chars/word incl. spaces/punctuation) — re-measure after the first real voice
+budget_chars: [7500, 13500]   # ≈ 1,300–2,300 words → 8:30–15:00 with the tight pauses below
+max_shot_s: 8                 # reference cuts every 3–5 s; QA warns above 8 s
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks:
+    first_after_s: 90
+    min_gap_s: 150
+    last_before_end_s: 45
+    at: chapter                # mid-roll at the start of a story (after the bridge line = a natural cliff-hanger)
+
+chapters:
+  required: true
+  first_title: "Mở đầu"
+  min_count: 3                 # mở đầu + ≥ 2 chuyện
+  min_len_s: 10
+
+beats:
+  - {name: hook,    seconds: [0, 12],   job: "1–2 câu: chủ đề cảm xúc + lời hứa hậu quả ('đây là 3 lần… và cái kết không ai ngờ'). Không chào, không giới thiệu kênh"}
+  - {name: story1,  seconds: [12, 270], job: "chuyện MẠNH NHẤT trước: thẻ tên → 'Năm X, [ai] đang [làm gì]' → làm người xem thương → biến cố → leo thang → cao trào chậm, chi tiết giác quan → hậu quả + twist/fact cuối"}
+  - {name: bridge1, seconds: [270, 285], job: "câu nối sang chuyện sau (callback / so sánh: 'người tiếp theo còn xui hơn')"}
+  - {name: story2,  seconds: [285, 540], job: "cùng 8 nhịp"}
+  - {name: story3,  seconds: [540, 780], job: "cùng 8 nhịp (tuỳ độ dài)"}
+  - {name: outro,   seconds: [780, 800], job: "1 câu chốt hài/tự trào + gợi ý video khác. Không outro dài"}
+rules:
+  - "mỗi chuyện mở bằng shot `chapter: <tên chuyện>` + template title_card (hoặc date_card ngay sau)"
+  - "không kéo dài cho đủ 8 phút: thêm một chuyện thật, không thêm câu thừa"
+  - "mỗi shot ≤ 8 giây; đổi tư thế mỗi 0,3–0,7 giây (step/talk/tilt trong core.js), không tween mượt"
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null              # the reference has no burned-in subtitles; set {y, size, max_chars} to turn them on
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

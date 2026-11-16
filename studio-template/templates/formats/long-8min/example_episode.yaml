@@ -1,0 +1,56 @@
+# EPISODE SPEC — long-8min (YouTube ngang, ≥ 8 phút, có chương + gợi ý mid-roll)
+# Tạo bằng: ./new_episode.sh <kênh> <id> long-8min
+# Mục tiêu 8:30–11:00 ≈ 7.400–10.000 ký tự lời thoại. Chạy `plan` để xem từng chương dài bao nhiêu.
+id: example-episode
+status: idea                # idea → script-approved → voiced → rendered → posted
+format: long-8min
+title: "Tiêu đề YouTube (≤ 60 ký tự, có câu hỏi hoặc điều ngược đời)"
+thumbnail_text: "≤ 4 CHỮ"
+source_ref: ""
+
+facts:
+  - id: f1
+    claim: "khẳng định cần kiểm chứng"
+    source: "https://…"
+
+post:                       # viết SAU khi video được duyệt (cổng 2), rồi chạy: build.py … post  → post.md
+  caption: ""               # theo blueprint publishing.caption
+  hashtags: []              # 1-2 hashtag riêng của tập; hashtag chung lấy từ blueprint
+  cover_s: 5                # giây lấy làm ảnh bìa; video dài nên làm thumbnail riêng
+
+shots:
+  # ---- cold open (chưa có chương → tự thành chương "Mở đầu" lúc 0:00)
+  - id: cold_open
+    lines: ["Khoảnh khắc sốc nhất của cả video, nói trước, chưa giải thích."]
+    template: encounter
+    params: {bg: sea, hunter: {animal: orca, mood: angry}, prey: {animal: shark, react_mood: scared}}
+  - id: intro
+    lines: ["Chào mọi người, tui là Shiba. Hôm nay mình trả lời câu hỏi: … Có bốn chuyện cần kể."]
+    template: narrator_talk
+    params: {bg: "card:cream", pose: point_up, bubble: {text: "4 chuyện!", at: "bốn chuyện"}}
+
+  # ---- chương 1: mở bằng title_card có `chapter:`, kết bằng câu móc
+  - id: c1_title
+    chapter: "Tên chương 1"
+    lines: ["Chuyện thứ nhất: …"]
+    template: title_card
+    params: {color: yellow, number: 1, text: "Tên chương 1"}
+  - id: c1_fact
+    lines: ["Bối cảnh. Dữ kiện có số liệu.", "So sánh đời thường. Câu đùa."]
+    template: analogy
+    params: {bg: "card:cream", subject: {animal: shark}, prop: {name: battery, at: "So sánh"}}
+    stickers: [{text: "nhãn ≤ 6 chữ", at: "Dữ kiện"}]
+    claims: [f1]
+  - id: c1_hook
+    lines: ["Nhưng chuyện thứ hai còn kỳ lạ hơn."]     # câu móc ngay trước khoảng lặng chương → chỗ đặt quảng cáo
+    template: narrator_talk
+    params: {bg: "card:cream", pose: think}
+
+  # ---- chương 2, 3, 4 … (cùng công thức) ; `ad_break: true` trên một shot = cho phép đặt quảng cáo ở đầu shot đó
+
+  # ---- kết
+  - id: payoff
+    chapter: "Tóm lại"
+    lines: ["Ý một. Ý hai. Ý ba.", "Câu chốt hài. Thấy hay thì bấm đăng ký nha."]
+    template: ending_sign
+    params: {bg: sea, winner: orca, loser: shark, sign: "Khu này có chủ"}

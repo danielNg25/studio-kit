@@ -1,0 +1,20 @@
+# Long ~2-3 min, horizontal — YouTube. Dưới 8 phút → KHÔNG chèn được quảng cáo giữa video; muốn mid-roll dùng long-8min.
+id: long-150
+size: [1920, 1080]
+fps: 30
+duration_s: [120, 180]
+pauses: {sentence: 0.35, line: 0.45, shot: 0.65}
+chars_per_second: 20
+budget_chars: [1900, 2900]
+beats:
+  - {name: hook,     seconds: [0, 10],    job: "câu sốc + câu hỏi"}
+  - {name: reasons,  seconds: [10, 90],   job: "2-4 ý, mỗi ý có thẻ chương (title_card), so sánh đời thường"}
+  - {name: how,      seconds: [90, 110],  job: "cơ chế / cách nó làm"}
+  - {name: evidence, seconds: [110, 140], job: "case thật, năm, địa điểm, số liệu (map, bar_chart)"}
+  - {name: payoff,   seconds: [140, 160], job: "tóm tắt + câu chốt + CTA"}
+layout:
+  title_box: null
+  sticker:   {y: 110, size: 56, max_words: 6, fill: "#FAD93C"}
+  subtitles: {y: 1022, size: 50, max_chars: 46}
+  content:   {zoom: 1.0, center_y: 540, floor_y: 929, push: 0.035}
+  safe_bottom: 1080

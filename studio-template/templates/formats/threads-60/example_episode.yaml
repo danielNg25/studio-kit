@@ -1,0 +1,39 @@
+# EPISODE SPEC — threads-60 (đọc lại bài Threads). Tạo bằng: ./new_episode.sh <kênh> <id> threads-60
+# lines = lời đọc (viết rõ chữ tắt, bỏ (1)(2)); params.card.text = NGUYÊN VĂN bài gốc (hiển thị)
+id: example-episode
+status: idea
+format: threads-60
+title_box: ""
+source_ref: "https://www.threads.com/@user/post/…"   # link bài gốc — bắt buộc (ghi công + kiểm tra lại)
+
+facts: []                   # chỉ cần khi kênh tự thêm số liệu / lời khuyên có nguồn
+
+post:
+  caption: ""
+  hashtags: []
+  cover_s: 1
+
+kind: canh-bao              # tam-su | canh-bao | meo | chuyen-doi | hai — tam-su: không sound cợt nhả, không meme
+# Tài nguyên (folder theo blueprint `media:`; mặc định kênh ở blueprint; tên file không cần đuôi). Chọn theo <folder>/library.yaml + blueprint media_rules.
+intro_sfx: dun-dun-dun      # sound mở đầu (giọng chờ sound); `false` = không; bỏ trống = blueprint (bốc ngẫu nhiên, trừ kind tam-su)
+# music: {file: lofi-buon-01}            # hoặc false = không nhạc; bỏ trống = blueprint (bốc 1 bài trong assets/music)
+# background: {file: parkour-01, dim: 0.2, blur: 0}   # false = nền tự vẽ
+
+shots:
+  - id: p0
+    lines: ["Lời đọc của bài chính, viết rõ chữ tắt."]
+    template: threads_card
+    params:
+      card: {user: tacgia, date: "07/31/25", stats: ["12.2K", "295", "499", "933"], text: "Nguyên văn bài chính"}
+    # sfx: [{file: vine-boom, at: "chữ trong lời của shot này"}]      # at: chữ | số giây từ đầu shot | bỏ trống = lúc khung hiện
+    # memes: [{file: meo-ngac-nhien, at: "chữ", dur: 1.6, pos: auto, sfx: vine-boom}]   # pos: auto|top|bottom|center|tl|tr|bl|br
+  - id: p1
+    lines: ["Lời đọc phần tiếp theo."]
+    template: threads_card
+    params:
+      card: {user: tacgia, date: "07/31/25", author: true, stats: ["1.5K", "1", "2", "7"], part: "1/3", text: "Nguyên văn phần tiếp theo"}
+  - id: c1
+    lines: ["Lời đọc một bình luận hay."]
+    template: threads_card
+    params:
+      card: {user: "ngu•••", date: "07/31/25", stats: ["21", "1"], part: "bình luận", text: "Nguyên văn bình luận"}

@@ -1,0 +1,40 @@
+# Long-form YouTube for the Japanese ANIMAL channel (japan-animal, 2026-10-07): 16:9, 24 fps, chapters + mid-roll ads,
+# full-sentence テロップ coloured by speaker (same layout.js as story-clip-ja-telop; copy kept here so formats stay independent).
+# Lines may contain ｜ = subtitle break inside one TTS clip (engine/patches/apply_ja_breath.py); the telop shows one piece at a time.
+# Scenes cut per line (shot params.b = one scene name per line, see japan-animal/episodes/karasu/scenes.js).
+# Separate from story-long-ja (japan-company) — do not edit that one.
+id: story-long-ja-telop
+size: [1920, 1080]
+fps: 24
+duration_s: [480, 900]        # ≥ 8:00 so mid-roll ads are allowed
+duration_hard: false
+pauses: {sentence: 0.3, line: 0.32, shot: 0.45, chapter: 1.1}
+chars_per_second: 5.6         # first guess for VOICEVOX 1.10 with many short turns — re-measure after voice
+colour: bt709
+budget_chars: [2200, 5000]
+max_shot_s: 30                # shots are speaker turns; cuts happen per line inside them
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks: {first_after_s: 120, min_gap_s: 150, last_before_end_s: 60, at: chapter}
+
+chapters:
+  required: true
+  first_title: "オープニング"
+  min_count: 4
+  min_len_s: 20
+
+beats:
+  - {name: cold_open, seconds: [0, 40],   job: "tiểu phẩm Shiba–mèo + câu hỏi của tập; không chào hỏi"}
+  - {name: chapters,  seconds: [40, 480], job: "4–6 chương, mỗi chương một kiểu (giải thích / phỏng vấn / kiểm chứng tin đồn / mẹo thực tế)"}
+  - {name: ending,    seconds: [480, 540],job: "tóm tắt 1–2 câu + gag đảo vai gọi lại mở đầu"}
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null
+  telop: {y: 992, size: 62, max_chars: 22, font: "Noto Sans CJK JP", weight: 900, outline: "#101010", ow: 14,
+          colors: {shiba: "#FFFFFF", neko: "#FFB3D1", karasu: "#C9D6E8", default: "#FFFFFF"}, emph: "#FFE14D"}
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

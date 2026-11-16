@@ -1,0 +1,49 @@
+# English science explainer, 16:9 — YouTube, Kurzgesagt tier (flat-v1 + light.js) — channel ve_chuyen_ref from 2026-10-06.
+# Measured on 4 Kurzgesagt videos (ve_chuyen_ref/references/style/kurzgesagt.md): narration covers 87–88 % of the time,
+# pauses ~0.3–0.4 s, ~150–165 words/min overall (~3 words/s while speaking), cut every 2–3 s, camera always drifting,
+# music ≈ 12 dB under the voice, dense SFX. NO burned-in subtitles: `audio` writes an SRT for YouTube captions
+# (build/<id>.en.srt + out/<id>_explainer-en.en.srt). Labels on screen (tagLabel) are English.
+# Real uploads: 8:00+ (mid-roll ads, https://support.google.com/youtube/answer/6175006) → 1,250–2,000 words.
+# The first pilot (tetanus) is a ~3:30 style/voice test; QA only warns on length.
+id: explainer-en
+size: [1920, 1080]
+fps: 30
+duration_s: [480, 900]
+pauses: {sentence: 0.3, line: 0.4, shot: 0.45, chapter: 1.0}
+chars_per_second: 15          # English ≈ 160 wpm × ~5.7 chars/word; Kokoro am_michael @0.95 — `audio` gives the real number
+budget_chars: [7000, 11500]   # ≈ 1,250–2,000 words → 8:00–13:00
+max_shot_s: 6                 # reference cuts every 2–3 s; a shot may hold longer only if the camera moves / something new happens
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks:
+    first_after_s: 90
+    min_gap_s: 150
+    last_before_end_s: 45
+    at: chapter
+
+chapters:
+  required: false             # pilot; turn on for 8+ min uploads (YouTube needs ≥ 3 chapters, first at 0:00, each ≥ 10 s)
+  first_title: "Intro"
+  min_count: 3
+  min_len_s: 10
+
+beats:
+  - {name: cold_open, seconds: [0, 20],   job: "you are already in the worst moment (shape A) / a paradox (shape C); no greeting, no channel intro"}
+  - {name: rewind,    seconds: [20, 45],  job: "time tag 'X days earlier' → an ordinary moment that starts it"}
+  - {name: mechanism, seconds: [45, 120], job: "zoom in: the culprit, the mechanism step by step, one everyday comparison, name things with tagLabel"}
+  - {name: escalate,  seconds: [120, 170],job: "timeline, symptoms/consequences escalate, sourced numbers"}
+  - {name: twist,     seconds: [170, 200],job: "'if only…' rewinds the other endings + bust one myth"}
+  - {name: payoff,    seconds: [200, 215],job: "the usable lesson + a dry punchline"}
+rules:
+  - "narration is continuous: no waiting for visual gags (hold: only for a real punchline, ≤ 0.6 s)"
+  - "every scene: one dominant hue + one glowing accent, ≥ 1 blurred layer (far or near), subject ≥ 40 % of the frame"
+  - "shots 2–4 s; long sentences get 2 pictures (split the line across two shots)"
+  - "on-screen text only as English tagLabel names / big numbers / time tags; nothing that needs translating to understand the story"
+
+layout:
+  title_box: null
+  sticker: null
+  subtitles: null              # captions go to YouTube as an SRT (engine `subs`), never burned in
+  content: {zoom: 1.0, center_y: 540, floor_y: 900, push: 0.0}
+  safe_bottom: 1080

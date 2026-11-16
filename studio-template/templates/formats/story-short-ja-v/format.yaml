@@ -1,0 +1,22 @@
+# YouTube Shorts DỌC 9:16, tiếng Nhật (japan-company, 2026-10-13): Short dựng lại từ một tập dài — KHÔNG cắt khung ngang.
+# Cảnh vẫn vẽ ở toạ độ 1920×1080 (scenes.js của tập dài); scenes.js của Short bọc EPISODE_SCENES.beats để lấy khung dọc theo
+# từng beat (v: {m: crop|mid|full, x}) + vẽ dải tiêu đề trên. layout.js chỉ vẽ phụ đề 2 dòng, màu theo người nói.
+id: story-short-ja-v
+size: [1080, 1920]
+fps: 24
+duration_s: [25, 90]
+duration_hard: false
+pauses: {sentence: 0.22, line: 0.25, shot: 0.3, chapter: 0.4}
+chars_per_second: 6.4
+colour: bt709
+budget_chars: [150, 520]
+max_shot_s: 20
+chapters:
+  required: false
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: {y: 1478, size: 58, line_h: 80, wrap: 14, max_chars: 60, speakers: {narr: {fill: '#FFFFFF', outline: '#173F43', band: 'rgba(10,26,28,0.80)'}, shacho: {fill: '#FFE27A', outline: '#7E2F27', band: 'rgba(40,14,10,0.80)'}}}
+  content: {zoom: 1.0, center_y: 960, floor_y: 960, push: 0.0}
+  safe_bottom: 1390

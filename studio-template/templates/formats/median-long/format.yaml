@@ -1,0 +1,42 @@
+# Explainer toán / lý / logic kiểu Median, ngang 16:9 — YouTube, 9–12 phút, KHÔNG người dẫn, style mono-v1.
+# Đo từ kênh mẫu (channel-median/references/competitors/median.md): 6 video 9–20 phút, ~190–200 chữ/phút, 1080p60, 5–6 "PHẦN".
+# ≥ 8:00 mới đặt được quảng cáo giữa video: https://support.google.com/youtube/answer/6175006
+id: median-long
+size: [1920, 1080]
+fps: 30                       # Median đăng 60 fps; chuyển động chậm nên 30 đủ mượt (render nhanh gấp đôi). Đổi 60 nếu thấy giật.
+colour: bt709
+duration_s: [510, 780]
+pauses: {sentence: 0.35, line: 0.45, shot: 0.6, chapter: 1.4}
+chars_per_second: 19
+budget_chars: [8500, 14000]
+max_shot_s: 25
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks: {first_after_s: 120, min_gap_s: 180, last_before_end_s: 45, at: chapter}
+
+chapters:
+  required: true
+  first_title: "Mở đầu"
+  min_count: 4
+  min_len_s: 20
+
+beats:
+  - {name: hook,      seconds: [0, 60],    job: "điều ai cũng biết → 'nhưng tại sao?' / tranh cãi / thế giới không có X; nêu các câu hỏi video sẽ trả lời"}
+  - {name: thesis,    seconds: [60, 100],  job: "luận điểm của video (vd: không phải quy ước mà là tất yếu)"}
+  - {name: history,   seconds: [100, 240], job: "lịch sử ngắn: ai, năm nào, ở đâu — chân dung + timeline"}
+  - {name: explain,   seconds: [240, 480], job: "2–4 cách giải thích từ trực quan → chặt chẽ, mỗi cách một PHẦN"}
+  - {name: edge,      seconds: [480, 600], job: "trường hợp biên làm vỡ cách hiểu / mở rộng sang lĩnh vực khác"}
+  - {name: recap,     seconds: [600, 690], job: "tổng kết từng ý bằng lời + câu chốt triết lý + CTA hỏi ý kiến ở bình luận"}
+rules:
+  - "mỗi PHẦN mở bằng m_chapter; trong phần đổi hình 3–8 s một lần (mục mới hiện ra / mục cũ mờ đi)"
+  - "đơn sắc tuyệt đối; không ảnh màu, không stock footage; chân dung public domain chuyển xám"
+  - "mọi công thức qua `tex:` (MathJax), không gõ tay ký hiệu"
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

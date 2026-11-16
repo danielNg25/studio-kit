@@ -1,0 +1,23 @@
+# story-clip for JAPANESE channels (e.g. japan-company): same look/pacing as story-clip (stickhead-v1, 16:9, 24 fps),
+# plus burned-in Japanese subtitles (テロップ) at the bottom — Japanese viewers expect them (often watch muted).
+# Japanese has no spaces: the engine shows ONE LINE of episode.yaml as one subtitle → keep each line ≤ ~26 characters.
+id: story-clip-ja
+size: [1920, 1080]
+fps: 24
+duration_s: [20, 90]
+duration_hard: false
+pauses: {sentence: 0.2, line: 0.22, shot: 0.25, chapter: 0.6}
+chars_per_second: 7          # Japanese TTS ≈ 6–7 characters/s (VOICEVOX speed 1.1, measured 2026-10-06)
+budget_chars: [120, 600]
+max_shot_s: 8
+beats:
+  - {name: hook,   seconds: [0, 4],   job: "1 câu: nghịch lý / con số sốc"}
+  - {name: story,  seconds: [4, 26],  job: "khởi đầu → đỉnh cao → sai lầm → sụp đổ"}
+  - {name: punch,  seconds: [26, 32], job: "1 câu chốt hài đen"}
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: {y: 1002, size: 54, max_chars: 60}
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 940

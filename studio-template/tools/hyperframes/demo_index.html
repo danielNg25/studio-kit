@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/world/vendor/d3-array.min.js"></script>
+    <script src="assets/world/vendor/d3-geo.min.js"></script>
+    <script src="assets/world/vendor/d3-geo-projection.min.js"></script>
+    <script src="assets/world/vendor/topojson-client.min.js"></script>
+    <script src="assets/world/world-50m.js"></script>
+    <script src="assets/world/world.js"></script>
+    <style>
+      @font-face { font-family: BVP; src: url(assets/BeVietnamPro-Medium.ttf); font-weight: 500; }
+      @font-face { font-family: BVP; src: url(assets/BeVietnamPro-Bold.ttf); font-weight: 700; }
+      @font-face { font-family: BVP; src: url(assets/BeVietnamPro-ExtraBold.ttf); font-weight: 800; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #dcebf2; }
+      #root { position: relative; width: 1920px; height: 1080px; font-family: BVP, sans-serif; }
+      #map { position: absolute; inset: 0; }
+      .pill { position: absolute; left: 1150px; top: 420px; background: #f97316; color: #fff; border-radius: 48px; padding: 18px 40px; }
+      .pill b { display: block; font-size: 34px; font-weight: 800; }
+      .pill span { font-size: 22px; font-weight: 700; }
+      .q { position: absolute; left: 70px; top: 60px; background: #fff; border-radius: 22px; padding: 28px 40px; box-shadow: 0 8px 28px rgba(15,23,42,.12); }
+      .q div { font-size: 50px; font-weight: 800; color: #1f2933; line-height: 1.25; }
+      .q div + div { color: #0f766e; }
+      .card { position: absolute; left: 70px; top: 700px; width: 330px; background: #fff; border-radius: 18px; padding: 22px 28px; box-shadow: 0 8px 28px rgba(15,23,42,.12); }
+      .card small { font-size: 22px; font-weight: 700; color: #0f766e; }
+      .card .n { font-size: 72px; font-weight: 800; color: #0f766e; }
+      .card .u { font-size: 20px; font-weight: 500; color: #6b7785; }
+      .src { position: absolute; left: 40px; bottom: 22px; font-size: 17px; color: #6b7785; font-weight: 500; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+      <svg id="map" class="clip" data-start="0" data-duration="8" data-track-index="0" width="1920" height="1080" viewBox="0 0 1920 1080"><g id="cam"></g></svg>
+      <div class="q clip" id="q" data-start="0" data-duration="8" data-track-index="1"><div>Vì sao Campuchia và Lào</div><div>gần như trống rỗng?</div></div>
+      <div class="pill clip" id="pill" data-start="0" data-duration="8" data-track-index="2"><b>Sông Mê Kông</b><span>≈ 4.900 km · 6 nước</span></div>
+      <div class="card clip" id="card" data-start="0" data-duration="8" data-track-index="3"><small>Lào</small><div><span class="n" id="num">0</span> <span class="u">người/km²</span></div></div>
+      <div class="src clip" data-start="0" data-duration="8" data-track-index="4">Nguồn: Natural Earth (dân số 2019), Ủy hội sông Mê Kông · cảnh thử HyperFrames</div>
+    </div>
+    <script>
+      // Vẽ bản đồ (đồng bộ, không fetch) — gói world của studio, POV Việt Nam
+      var W = window.World, cam = document.getElementById('cam');
+      W.load('50m');
+      var pj = W.project('mercator', { width: 1920, height: 1080, padding: 0, fitBBox: [96.0, 6.4, 117.5, 23.6] });
+      W.drawBase(cam, { projection: pj, ocean: '#dcebf2', land: '#eef0f2', border: '#ffffff', borderWidth: 1.6, coast: '#9fb7c4',
+        riverColor: '#4a90b8', rivers: function (f) { return f.properties.rank <= 5; }, vnIslands: { labels: true, color: '#e11d48' } });
+      var path = d3.geoPath(pj);
+      var hl = ['LAO', 'KHM'].map(function (i) { return W.el('path', { d: path(W.country(i)), fill: '#0f766e', stroke: '#fff', 'stroke-width': 3, opacity: 0, 'class': 'hl' }, cam); });
+      var mk = W.feature('rivers', function (f) { return /Mê Kông/.test(f.properties.name_vi || ''); }).map(function (f) {
+        return W.el('path', { d: path(f), fill: 'none', stroke: '#f97316', 'stroke-width': 7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'class': 'mk' }, cam); });
+      W.drawCountryLabels(cam, pj, { isos: ['THA', 'VNM', 'MMR'], size: 26 });
+      W.assertLegal(document.getElementById('map'), pj);
+      mk.forEach(function (p) { var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+
+      var tl = gsap.timeline({ paused: true });
+      // camera: từ toàn vùng zoom nhẹ vào Lào–Campuchia (Ken Burns), giữ tỉ lệ theo tâm
+      tl.fromTo('#cam', { scale: 1, svgOrigin: '1000 520' }, { scale: 1.22, svgOrigin: '1000 520', duration: 8, ease: 'none' }, 0);
+      tl.from('#q', { opacity: 0, y: -24, duration: 0.6, ease: 'power2.out' }, 0.2);
+      tl.to('.hl', { opacity: 1, duration: 0.8, stagger: 0.25 }, 1.0);
+      tl.to('.mk', { strokeDashoffset: 0, duration: 3.0, ease: 'power1.inOut' }, 2.0);
+      tl.from('#pill', { opacity: 0, scale: 0.6, transformOrigin: '0% 50%', duration: 0.5, ease: 'back.out(2)' }, 3.6);
+      tl.from('#card', { opacity: 0, y: 30, duration: 0.5, ease: 'power2.out' }, 5.2);
+      var o = { v: 0 };
+      tl.to(o, { v: 31, duration: 1.2, ease: 'power1.out', onUpdate: function () { document.getElementById('num').textContent = Math.round(o.v); } }, 5.3);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

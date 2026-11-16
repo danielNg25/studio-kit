@@ -1,0 +1,23 @@
+# Reddit post ~60-90s, vertical — đọc lại bài Reddit (vd r/vozforums): khung bài sáng kiểu Reddit + chuỗi bình luận lồng nhau + giọng đọc.
+# Dựng từ bản thử 2026-10-07. Mẫu cảnh `reddit_post` và `reddit_thread` nằm trong layout.js của format này.
+# Không vẽ logo Reddit / Snoo: avatar = vòng tròn màu + chữ cái đầu.
+id: reddit-60
+size: [1080, 1920]
+fps: 30
+duration_s: [50, 95]
+duration_hard: false
+pauses: {sentence: 0.3, line: 0.45, shot: 0.6}
+chars_per_second: 20
+budget_chars: [900, 1700]
+max_shot_s: 30               # khung bài / chuỗi bình luận dài được đứng lâu
+rules:
+  - "bài Reddit dài: RÚT GỌN TRUNG THÀNH — giữ giọng kể + câu đắt nguyên văn, cắt đoạn lan man; khung chỉ hiện đúng phần được đọc, chỗ cắt ghi …"
+  - "lời đọc (lines) = cùng nội dung nhưng viết rõ chữ tắt (k → không, dc → được, mqh → mối quan hệ), tiếng Anh khó đọc thì nói bằng tiếng Việt"
+  - "ghi công tác giả (u/tên đầy đủ trong khung bài); che bớt tên người bình luận (Meomeo•••); avatar = chữ cái đầu"
+  - "bỏ chi tiết nhạy cảm của người bình luận / người thứ ba (xu hướng tính dục, bệnh, bạo lực, tên thật, nơi làm việc) dù bài gốc có"
+layout:
+  title_box: null
+  sticker: null
+  subtitles: null            # chữ đã nằm trong khung
+  content: {zoom: 1.0, center_y: 960, floor_y: 1720, push: 0}
+  safe_bottom: 1600

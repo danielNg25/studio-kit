@@ -1,0 +1,22 @@
+# One story as a short clip, horizontal 16:9 — test episodes / a single story cut from a story-long video (stickhead-v1).
+# Same look and tight pacing as story-long; no chapters, no mid-roll. Length is a reference, not a target (duration_hard: false).
+id: story-clip
+size: [1920, 1080]
+fps: 24
+duration_s: [20, 90]
+duration_hard: false
+pauses: {sentence: 0.22, line: 0.25, shot: 0.25, chapter: 0.6}
+chars_per_second: 20
+budget_chars: [300, 1600]
+max_shot_s: 8
+beats:
+  - {name: hook,   seconds: [0, 4],   job: "1 câu: nghịch lý / lời hứa của chuyện"}
+  - {name: story,  seconds: [4, 26],  job: "'Năm X, [ai] đang [làm gì]' → biến cố → leo thang → twist"}
+  - {name: punch,  seconds: [26, 32], job: "1 câu chốt hài / thành ngữ"}
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

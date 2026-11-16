@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Chụp toàn trang (shorts-claude)",
+  "version": "1.1",
+  "description": "1 cú bấm: chụp toàn bộ trang (Reddit: chỉ cột bài + bình luận) và lưu vào Downloads/chup-toan-trang/",
+  "permissions": [
+    "debugger",
+    "downloads",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Chụp toàn trang"
+  },
+  "commands": {
+    "chup": {
+      "suggested_key": {
+        "default": "Alt+Shift+S",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Chụp toàn trang tab đang mở"
+    }
+  }
+}

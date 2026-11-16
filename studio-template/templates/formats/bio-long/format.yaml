@@ -1,0 +1,46 @@
+# Tiểu sử một nhân vật, ngang 16:9 — YouTube (+ Facebook video dài), 10–20 phút, tiếng Việt (VBee). Kênh: channel-vi-nhan.
+# Đo từ kênh mẫu Thanh Pahm (2026-10-08, storyboard "Chúa Tể Đa Cấp Leonardo da Vinci" 10:53, 4,6M view):
+#   mẫu 5 giây/khung → gần như khung nào cũng khác → đổi cảnh/hình mỗi 2–5 giây; kể theo các chặng đời; có thẻ tên + năm cho mỗi
+#   nhân vật/địa điểm mới; người dẫn (avatar) mở đầu và chen vào; đoạn cuối "phỏng vấn" nhân vật + giới thiệu video khác.
+#   Video tiểu sử của họ dài 9:33–20:25 (Picasso, Leonardo, Van Gogh, Hitler). Người dùng chốt 10–20 phút ("trên 30 phút xem oải").
+# ≥ 8:00 mới đặt được quảng cáo giữa video trên YouTube: https://support.google.com/youtube/answer/6175006
+id: bio-long
+size: [1920, 1080]
+fps: 24
+duration_s: [600, 1200]
+pauses: {sentence: 0.35, line: 0.4, shot: 0.4, chapter: 1.2}
+chars_per_second: 20          # tiếng Việt VBee tốc độ 1.1 (đo ở long-8min) — đo lại sau lần tạo giọng đầu tiên
+budget_chars: [10500, 21000]  # ≈ 10–20 phút với các khoảng nghỉ trên; `plan` in ra độ dài ước tính từng chương
+max_shot_s: 6                 # mẫu đổi hình 2–5 s; QA cảnh báo shot > 6 s
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks: {first_after_s: 120, min_gap_s: 180, last_before_end_s: 60, at: chapter}
+
+chapters:
+  required: true
+  first_title: "Mở đầu"
+  min_count: 4                 # mở đầu + ≥ 3 chặng đời
+  min_len_s: 20
+
+beats:
+  - {name: hook,      seconds: [0, 35],     job: "biệt danh / nghịch lý của nhân vật trong 1–2 câu (không chào, không giới thiệu kênh) → người dẫn xuất hiện, hứa điều người xem sẽ biết"}
+  - {name: childhood, seconds: [35, 180],   job: "xuất thân + một chi tiết lạ (nghèo, con rơi, bị chê dốt…) làm người xem thương/tò mò; thẻ nơi chốn + năm"}
+  - {name: rise,      seconds: [180, 450],  job: "bước ngoặt + đi lên; mỗi nhân vật phụ có thẻ tên (năm sinh–mất); 1 câu đùa mỗi 20–40 s"}
+  - {name: peak,      seconds: [450, 750],  job: "đỉnh cao + thành tựu chính (cho thấy, không liệt kê) + mặt tối/xung đột"}
+  - {name: fall,      seconds: [750, 960],  job: "sa sút / cái chết; kể nghiêm khi bi kịch, không đùa cợt cái chết"}
+  - {name: legacy,    seconds: [960, 1080], job: "di sản + 1 fact bất ngờ cuối"}
+  - {name: outro,     seconds: [1080, 1140],job: "cảnh 'phỏng vấn' ngắn hoặc câu chốt tự trào của người dẫn + gợi ý video khác. Không outro dài"}
+rules:
+  - "mỗi chặng đời mở bằng shot `chapter: <tên chặng>` (title_card hoặc date_card); cuối chặng có 1 câu móc sang chặng sau"
+  - "nhân vật/địa điểm xuất hiện lần đầu → thẻ tên + năm (người: năm sinh – năm mất; nơi chốn: tên, năm)"
+  - "không kéo cho đủ 10 phút: thêm chi tiết thật có nguồn, không thêm câu thừa; quá 20 phút thì tách thành 2 tập"
+  - "đổi hình mỗi 2–5 s; người dẫn chiếm ~5–15 % thời lượng"
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null              # mẫu không in phụ đề (chỉ in ở đoạn phỏng vấn); YouTube dùng SRT (`build.py … subs`)
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

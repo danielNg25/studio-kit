@@ -1,0 +1,40 @@
+# story-long-ja with SPEAKER-COLOURED burned-in subtitles (japan-company, 2026-10-09: user wants テロップ back, one colour per
+# character — layout.js reads the speaker of the shot being shown). The .srt is still written for YouTube.
+# Otherwise identical to story-long-ja: 16:9, 24 fps, burned-in Japanese subtitles (テロップ),
+# chapters + mid-roll ads. Same layout as story-clip-ja. One line of episode.yaml = one sentence read in ONE go; subtitle
+# breaks inside it are marked ｜ (engine/patches/apply_ja_breath.py) — each piece ≤ ~26 characters.
+# Long shots are cut visually with the `beats` scene dispatcher (one beat per line) — see japan-company/references/style/karte-v1.md.
+id: story-long-ja-tel
+size: [1920, 1080]
+fps: 24
+duration_s: [480, 1080]       # ≥ 8:00 so mid-roll ads are allowed
+duration_hard: false
+pauses: {sentence: 0.3, line: 0.32, shot: 0.55, chapter: 1.1}
+chars_per_second: 6.2         # measured 2026-10-07: VOICEVOX 玄野武宏 speed 1.10 incl. pauses (Nokia: 4,010 chars → 10:47)
+colour: bt709                 # render.mjs converts the JPEG frames (BT.601) to the BT.709 matrix + tags it (2026-10-07 v2 review: tagging alone was wrong)
+budget_chars: [3000, 6500]
+max_shot_s: 20                # shots are speaker turns; visual cuts happen inside them (beats)
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks: {first_after_s: 150, min_gap_s: 180, last_before_end_s: 60, at: chapter}
+
+chapters:
+  required: true
+  first_title: "オープニング"
+  min_count: 4
+  min_len_s: 20
+
+beats:
+  - {name: cold_open, seconds: [0, 40],    job: "nghịch lý / con số sốc + 'bệnh nhân hôm nay'"}
+  - {name: skit,      seconds: [40, 90],   job: "茶番 ngắn: 社長くん khoe, 医師 hỏi một câu trúng bệnh"}
+  - {name: chapters,  seconds: [90, 600],  job: "既往歴 → 全盛期 → 発症 → 手術 → リハビリ (mỗi chương 1–3 phút)"}
+  - {name: findings,  seconds: [600, 660], job: "thẻ 所見 + câu chốt gọi lại câu đùa ở 茶番"}
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: {y: 1002, size: 54, max_chars: 60, speakers: {narr: {fill: '#FFFFFF', outline: '#173F43', band: 'rgba(10,26,28,0.62)'}, shacho: {fill: '#FFE27A', outline: '#7E2F27', band: 'rgba(40,14,10,0.62)'}}}
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 940

@@ -1,0 +1,20 @@
+# Short dọc ~60-75s, cảnh 3D (Three.js) vẽ ở lớp canvas dưới, SVG chỉ có phụ đề từng chữ (kiểu You Built It).
+# Dùng cùng một bộ cảnh 3D của kênh (vd channel-median/assets/yard_kit.js) qua blueprint.extra_scripts.
+id: yard-short
+size: [1080, 1920]
+fps: 30
+duration_s: [60, 75]
+duration_hard: false
+pauses: {sentence: 0.25, line: 0.3, shot: 0.35}
+chars_per_second: 15          # tiếng Anh, giọng đọc nhanh vừa (dùng cho xem thử không tiếng)
+budget_chars: [850, 1100]
+beats:
+  - {name: hook,   seconds: [0, 4],   job: "cảnh thô sơ ban đầu + câu 'If you ...'"}
+  - {name: build,  seconds: [4, 55],  job: "xây từng bước, mỗi bước một hành động thấy được trên cảnh cắt ngang"}
+  - {name: payoff, seconds: [55, 72], job: "thành phẩm đang được dùng, câu chốt"}
+rules:
+  - "mỗi câu ứng với một thay đổi thấy được trên cảnh"
+  - "phụ đề hiện TỪNG CHỮ, giữa màn hình"
+layout:
+  subtitles: {y: 1010, size: 92, max_chars: 1, font: Fredoka, weight: 700}
+  safe_bottom: 1600

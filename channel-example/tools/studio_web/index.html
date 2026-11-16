@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<style>
+/* Sơn mài: nền nâu đỏ, vàng nhũ, chữ màu ngà. Điểm nhấn duy nhất: dải công đoạn của tập. */
+:root{--lac:#2B1416;--lac2:#361A1C;--lac3:#452326;--line:#5A3134;--gold:#D4AF5A;--gold2:#F1D58C;--egg:#F0E6D2;--mute:#B9A08E;--jade:#6DB394;--cin:#E0614A;--ink:#1A0B0C;
+  --r1:6px;--r2:12px;--sans:"Be Vietnam Pro",-apple-system,sans-serif;--serif:"Lora",Georgia,serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:var(--lac);color:var(--egg);font:15px/1.6 var(--sans);
+  background-image:radial-gradient(1200px 600px at 85% -10%,rgba(212,175,90,.10),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(224,97,74,.08),transparent 60%)}
+a{color:var(--gold2)}::selection{background:var(--gold);color:var(--ink)}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+button{font:inherit;font-size:13.5px;color:var(--egg);background:var(--lac3);border:1px solid var(--line);border-radius:var(--r1);padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--gold)}button.gold{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600}button.gold:hover{background:var(--gold2)}
+button.ghost{background:transparent}
+input,textarea{font:inherit;color:var(--egg);background:var(--ink);border:1px solid var(--line);border-radius:var(--r1);padding:7px 10px}
+input:focus,textarea:focus{border-color:var(--gold);outline:none}
+.app{display:grid;grid-template-columns:300px 1fr;height:100vh}
+aside{border-right:1px solid var(--line);background:rgba(26,11,12,.35);display:flex;flex-direction:column;min-height:0}
+/* tab kênh: mỗi kênh một nút, kênh đang chọn nền vàng */
+.chans{display:flex;gap:0;margin:14px 14px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--lac2)}
+.chans button{flex:1;border:0;border-radius:0;background:none;padding:9px 8px;font-weight:600;font-size:14px;color:var(--mute)}
+.chans button+button{border-left:1px solid var(--line)}.chans button:hover{color:var(--egg)}.chans button.on{background:var(--gold);color:var(--ink)}
+.brand{padding:16px 18px 12px;display:flex;align-items:baseline;gap:10px}
+.brand h1{font:700 22px/1 var(--serif);margin:0;color:var(--gold2)}
+.brand span{color:var(--mute);font-size:12.5px}
+.search{margin:0 14px 10px}.search input{width:100%}
+.navbtn{margin:0 14px 10px;display:flex;gap:8px}.navbtn button{flex:1}
+.list{overflow:auto;padding:0 8px 20px;flex:1}
+.ep{display:grid;grid-template-columns:74px 1fr;gap:10px;padding:8px;border-radius:var(--r1);cursor:pointer;border:1px solid transparent;width:100%;text-align:left;background:none}
+.ep:hover{background:var(--lac2)}.ep.on{background:var(--lac3);border-color:var(--line)}
+.ep .th{width:74px;aspect-ratio:16/9;border-radius:4px;background:var(--lac3) center/cover;box-shadow:0 0 0 1px var(--line)}
+.ep b{display:block;font-weight:500;font-size:13.5px;line-height:1.35}.ep small{color:var(--mute);font-size:12px}
+main{overflow:auto;min-height:0}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 32px 80px}
+.head{display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start}
+.head h2{font:700 32px/1.2 var(--serif);margin:0 0 8px;color:var(--egg);text-wrap:balance}
+.head .meta{color:var(--mute);font-size:13px}.head .note{margin-top:12px;color:var(--mute);font-size:13px;max-width:70ch;line-height:1.5}
+.cover{width:300px;aspect-ratio:16/9;border-radius:var(--r2);background:var(--lac3) center/cover;box-shadow:0 0 0 1px var(--line),0 14px 40px rgba(0,0,0,.35);cursor:zoom-in}
+/* dải công đoạn */
+.steps{display:grid;grid-template-columns:repeat(9,1fr);margin:26px 0 22px;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--lac2)}
+.step{position:relative;padding:12px 12px 11px;border:0;border-right:1px solid var(--line);border-radius:0;background:none;text-align:left;display:flex;flex-direction:column;gap:2px}
+.step:last-child{border-right:0}.step:hover{background:var(--lac3)}
+.step .n{font:600 12px/1 var(--serif);color:var(--mute)}.step .t{font-weight:600;font-size:14px}.step .s{font-size:11.5px;color:var(--mute)}
+.step.done .n{color:var(--jade)}.step.done .n::after{content:" ✓"}
+.step.on{background:var(--gold);color:var(--ink)}.step.on .n,.step.on .s{color:rgba(26,11,12,.7)}
+.step.on::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;background:var(--gold);transform:translateX(-50%) rotate(45deg)}
+.panel{background:var(--lac2);border:1px solid var(--line);border-radius:var(--r2);padding:16px 18px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1}.mute{color:var(--mute);font-size:13px}
+h3{font:600 19px/1.3 var(--serif);color:var(--gold2);margin:22px 0 10px}
+.md{max-width:76ch;font-size:15.5px}.md h1,.md h2,.md h3{font-family:var(--serif);color:var(--gold2)}.md table{border-collapse:collapse}.md td,.md th{border:1px solid var(--line);padding:4px 9px}.md blockquote{border-left:3px solid var(--gold);margin:0;padding-left:14px;color:var(--mute)}
+.say{white-space:pre-wrap;margin:10px 0 0;max-width:80ch;font-size:15.5px;line-height:1.75;max-height:280px;overflow:auto;padding-right:8px}
+.chap{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:start}
+.chap h4{margin:0;font:600 16px/1.3 var(--serif)}
+.pill{font-size:12px;color:var(--mute);border:1px solid var(--line);border-radius:20px;padding:1px 9px}.pill.ok{color:var(--jade);border-color:rgba(109,179,148,.5)}
+textarea.ed{width:100%;min-height:68vh;font:14px/1.65 ui-monospace,Menlo,monospace}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.grid figure{margin:0}.grid img{width:100%;display:block;border-radius:var(--r1);cursor:zoom-in;background:#000;box-shadow:0 0 0 1px var(--line)}
+.grid figcaption{font-size:12px;color:var(--mute);margin-top:4px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px}
+.thumbs img{width:100%;border-radius:var(--r2);cursor:zoom-in;box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(0,0,0,.3)}
+.thumbs .mini{width:160px;border-radius:4px;margin-top:8px;cursor:default;box-shadow:0 0 0 1px var(--line)}
+video{width:100%;border-radius:var(--r2);background:#000;display:block}
+.short{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+.short video{aspect-ratio:9/16;max-height:444px;object-fit:contain}
+.short .nov{aspect-ratio:9/16;border:1px dashed var(--line);border-radius:var(--r2);display:grid;place-items:center;color:var(--mute);font-size:13px;text-align:center;padding:12px}
+.cb{background:var(--ink);border:1px solid var(--line);border-radius:var(--r1);padding:8px 10px;margin:6px 0 12px;white-space:pre-wrap;font-size:14.5px;line-height:1.55}
+.short.done{opacity:.62}
+.vids{display:grid;grid-template-columns:1fr 1fr;gap:18px}.vids .panel{margin:0}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:6px 14px}.kv dt{color:var(--mute)}.kv dd{margin:0}
+.lb{position:fixed;inset:0;background:rgba(10,4,5,.9);display:flex;align-items:center;justify-content:center;z-index:40;cursor:zoom-out}.lb img{max-width:95vw;max-height:93vh;border-radius:var(--r1)}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--jade);color:var(--ink);padding:9px 16px;border-radius:var(--r1);font-weight:600;z-index:50}.toast.bad{background:var(--cin)}
+.empty{padding:30px;text-align:center;color:var(--mute);border:1px dashed var(--line);border-radius:var(--r2)}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.feed .panel{margin:0;display:flex;flex-direction:column;gap:10px}.feed img{width:100%;border-radius:var(--r1);cursor:zoom-in}
+.feed b{font-weight:600;word-break:break-all}
+/* kênh Người que 3D (kiểu rick) */
+pre.json{background:var(--ink);border:1px solid var(--line);border-radius:var(--r1);padding:12px 14px;font:12.5px/1.55 ui-monospace,Menlo,monospace;white-space:pre-wrap;max-height:70vh;overflow:auto;margin:0}
+.docs{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}.docs .it{display:block;width:100%;text-align:left;margin:3px 0;background:none;border:1px solid transparent}.docs .it.on{background:var(--lac3);border-color:var(--line)}
+.gate{font-size:12px;border-radius:20px;padding:1px 9px;border:1px solid var(--line)}.gate.ok{color:var(--jade);border-color:rgba(109,179,148,.5)}.gate.bad{color:var(--cin);border-color:rgba(224,97,74,.5)}
+@media (max-width:900px){.app{grid-template-columns:1fr}aside{max-height:40vh}.head{grid-template-columns:1fr}.steps{grid-template-columns:repeat(4,1fr)}.vids{grid-template-columns:1fr}.wrap{padding:18px 16px 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div id="root"></div>
+<script>
+const { useState, useEffect, useCallback, useRef } = React, html = htm.bind(React.createElement);
+let CH = 'example';   // kênh đang chọn (tab ở đầu cột trái); mọi lời gọi API và đường dẫn file đều kèm kênh
+const F = p => '/f/' + CH + '/' + p.split('/').map(encodeURIComponent).join('/');
+const md = s => ({ __html: window.marked ? marked.parse(s || '') : (s || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])) });
+const ago = t => { const a = Date.now() / 1000 - t; return a < 90 ? 'vừa xong' : a < 3600 ? Math.round(a / 60) + ' phút trước' : a < 86400 ? Math.round(a / 3600) + ' giờ trước' : new Date(t * 1000).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }); };
+const size = n => n > 1e9 ? (n / 1e9).toFixed(2) + ' GB' : n > 1e6 ? (n / 1e6).toFixed(1) + ' MB' : Math.round(n / 1e3) + ' KB';
+const num = n => n.toLocaleString('vi-VN');
+async function api(u, body) { if (body) body = { ch: CH, ...body }; else u += (u.includes('?') ? '&' : '?') + 'ch=' + CH;
+  const r = await fetch(u, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {}); const j = await r.json(); j._code = r.status; return j; }
+let toastFn = () => {}, zoomFn = () => {};
+const copy = async (t, what) => { try { await navigator.clipboard.writeText(t); toastFn('Đã copy ' + what); } catch { toastFn('Không copy được', true); } };
+
+const STEPS = [
+  ['idea', 'Ý tưởng', E => E.backlog || E.docs.backlog_md ? 'có trong backlog' : 'chưa có', E => !!(E.backlog || E.docs.backlog_md)],
+  ['outline', 'Dàn ý', E => E.docs.outline ? ago(E.docs.outline.mtime) : 'chưa có', E => !!E.docs.outline],
+  ['script', 'Kịch bản', E => E.docs.script ? num(E.chapters.reduce((a, c) => a + c.chars, 0)) + ' ký tự' : 'chưa có', E => !!E.docs.script],
+  ['voice', 'Giọng', E => E.clips ? E.clips + ' câu đã thu' : 'chưa thu', E => E.clips > 0],
+  ['scenes', 'Hình', E => E.prev.length ? E.prev.length + ' ảnh soát' : 'chưa có', E => E.prev.length > 0],
+  ['video', 'Video', E => { const r = E.videos.filter(v => !v.test).length, x = E.videos.length - r; return r ? 'có bản thật' : x ? x + ' bản xem thử' : 'chưa render'; }, E => E.videos.some(v => !v.test)],
+  ['thumb', 'Ảnh bìa', E => E.thumbs.length ? E.thumbs.length + ' phương án' : 'chưa có', E => E.thumbs.length > 0],
+  ['post', 'Đăng bài', E => E.docs.post ? 'post.md sẵn' : 'chưa có', E => !!E.docs.post],
+  ['shorts', 'Shorts', E => E.shorts_n ? E.shorts_n + ' clip' : E.shorts_post ? 'có tiêu đề, chưa cắt' : 'chưa có', E => E.shorts_n > 0],
+];
+
+function Doc({ path, title }) {
+  const [T, setT] = useState(null), [ed, setEd] = useState(false), [val, setVal] = useState('');
+  const load = useCallback(() => api('/api/text?p=' + encodeURIComponent(path)).then(setT), [path]);
+  useEffect(() => { setEd(false); load(); }, [load]);
+  if (!T) return html`<div class="mute">Đang tải…</div>`;
+  if (T.err) return html`<div class="empty">${T.err}</div>`;
+  const raw = /\.(json|csv|log)$/.test(path), editable = !/\.(json|log)$/.test(path);
+  const save = async () => { const r = await api('/api/save', { p: path, text: val, mtime: T.mtime });
+    if (r._code === 409) { alert(r.msg); return; } if (r.err) return toastFn(r.err, true); toastFn('Đã lưu ' + path); setEd(false); load(); };
+  return html`<div class="panel">
+    <div class="row" style=${{ marginBottom: '10px' }}>${title && html`<b>${title}</b>`}<span class="mute">${path} · sửa ${ago(T.mtime)}</span><span class="sp"></span>
+      ${ed ? html`<button class="gold" onClick=${save}>Lưu</button><button class="ghost" onClick=${() => setEd(false)}>Huỷ</button>`
+        : html`${editable && html`<button class="gold" onClick=${() => { setVal(T.text); setEd(true); }}>Sửa</button>`}<button onClick=${() => copy(T.text, 'cả file')}>Copy cả file</button>`}</div>
+    ${ed ? html`<textarea class="ed" value=${val} onInput=${e => setVal(e.target.value)}></textarea><div class="mute" style=${{ marginTop: '6px' }}>Bản cũ tự chép vào _to_delete/web_bak/ trước khi ghi.</div>`
+      : raw ? html`<pre class="json">${T.text}</pre>` : html`<div class="md" dangerouslySetInnerHTML=${md(T.text)}></div>`}</div>`;
+}
+
+function Idea({ E }) {
+  return html`<div>${E.backlog ? html`<div class="panel"><dl class="kv">${Object.entries(E.backlog).filter(([, v]) => v).map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl></div>` : E.docs.backlog_md ? '' : html`<div class="empty">Tập này chưa có dòng trong backlog.csv.</div>`}
+    <h3>Nhật ký tiến độ</h3>${E.status_lines.length ? E.status_lines.slice().reverse().map(l => html`<div class="panel mute" style=${{ fontSize: '13.5px' }}>${l.replace(/^- /, '')}</div>`) : html`<div class="mute">${E.kind === 'kit' ? 'backlog.md' : 'STATUS.md'} chưa nhắc tập này.</div>`}
+    ${E.docs.backlog_md && html`<h3>Danh sách đề tài của kênh</h3><${Doc} path=${E.docs.backlog_md.p} />`}
+    ${E.docs.facts && html`<h3>Dữ kiện đã kiểm (research/facts.md)</h3><${Doc} path=${E.docs.facts.p} />`}</div>`;
+}
+
+function Script({ E }) {
+  const P = E.pack, items = P.length ? P.map(x => ({ n: x.name, t: x.text, c: x.chars, ok: x.mp3.length > 0 })) : E.chapters.map(c => ({ n: c.name, t: c.text, c: c.chars }));
+  const total = items.reduce((a, x) => a + x.c, 0);
+  return html`<div>
+    <div class="panel row"><div><b>Lời đọc để thu giọng</b><div class="mute">${P.length ? `Gói VBee ${E.kind === 'kit' ? 'voice' : 'audio'}/vbee_ui/ · ${P.length} phần` : `Chưa có gói VBee. Đây là lời theo chương trong ${E.kind === 'kit' ? 'script.md' : 'episode.yaml'} đã áp cách đọc, để xem; gói thu chính thức nhờ Claude tạo.`}</div></div><span class="sp"></span><span class="pill">${num(total)} ký tự</span></div>
+    ${items.map(x => html`<div class="panel"><div class="chap"><div class="row"><h4>${x.n}</h4><span class="pill">${num(x.c)} ký tự</span>${x.ok != null && html`<span class=${'pill' + (x.ok ? ' ok' : '')}>${x.ok ? 'đã có mp3' : 'chưa có mp3'}</span>`}</div>
+      <button class="gold" onClick=${() => copy(x.t, x.n)}>Copy</button></div><div class="say">${x.t}</div></div>`)}
+    <h3>script.md</h3>${E.docs.script ? html`<${Doc} path=${E.docs.script.p} />` : html`<div class="empty">Chưa có script.md.</div>`}</div>`;
+}
+
+function Voice({ E, reload }) {
+  const [dir, setDir] = useState(localStorage.getItem('vdir') || '~/Downloads'), [R, setR] = useState(null), [sel, setSel] = useState({});
+  const [show, setShow] = useState({});
+  const parts = [...E.pack].sort((a, b) => (a.name === 'tat_ca' ? -1 : 0) - (b.name === 'tat_ca' ? -1 : 0));
+  const names = E.pack.map(x => x.name + '.mp3');
+  const look = async () => { localStorage.setItem('vdir', dir); const r = await api('/api/lsaudio?dir=' + encodeURIComponent(dir)); setR(r);
+    const s = {}; (r.files || []).forEach(f => { if (names.includes(f.name)) s[f.name] = { on: true, to: f.name }; }); setSel(s); };
+  const go = async () => { const files = Object.entries(sel).filter(([, v]) => v.on).map(([n, v]) => ({ name: n, to: v.to || n })); if (!files.length) return toastFn('Chưa chọn file nào', true);
+    const r = await api('/api/copyvoice', { id: E.id, dir: R.dir, files }); if (r.err) return toastFn(r.err, true); toastFn('Đã chép ' + r.copied.length + ' file vào tập'); reload(); };
+  const upd = (n, k, v) => setSel(s => ({ ...s, [n]: { ...(s[n] || {}), [k]: v } }));
+  return html`<div>
+    <div class="panel"><div class="row"><b>Giọng trong tập</b><span class="sp"></span><span class="pill">${E.clips} câu đã cắt</span><span class="pill">tốc độ ${E.voice && E.voice.speed || '—'}</span></div>
+      ${(E.vbee_guide || []).length > 0 && html`<div style=${{ marginTop: '10px' }}><button class="ghost" onClick=${() => setShow(o => ({ ...o, _g: !o._g }))}>${show._g ? 'Ẩn' : 'Xem'} hướng dẫn thu trên web VBee (giọng, tốc độ, đặt tên file)</button>
+        ${show._g && E.vbee_guide.map(g => html`<div style=${{ marginTop: '8px' }}><${Doc} path=${g} /></div>`)}</div>`}
+      ${parts.length ? html`<div class="mute" style=${{ marginTop: '10px' }}>${parts.filter(x => x.name !== 'tat_ca').length} phần · tổng ${num(parts.filter(x => x.name !== 'tat_ca').reduce((a, x) => a + x.chars, 0))} ký tự. Bấm Copy rồi dán vào ô văn bản trên web VBee; tải mp3 về, đặt tên trùng tên phần.${parts.some(x => x.name === 'tat_ca') ? ' "tat_ca" là cả tập gộp một lần dán.' : ''}</div>` : ''}
+      ${parts.length ? parts.map(x => html`<div style=${{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--line)' }}><div class="row"><b style=${{ minWidth: '150px' }}>${x.name === 'tat_ca' ? 'tat_ca (cả tập)' : x.name}</b><span class="mute">${num(x.chars)} ký tự</span>
+          ${x.mp3.length ? html`<span class="pill ok">đã có giọng</span>` : E.clips ? '' : html`<span class="pill">chưa thu</span>`}<span class="sp"></span>
+          <button class="ghost" onClick=${() => setShow(o => ({ ...o, [x.name]: !o[x.name] }))}>${show[x.name] ? 'Ẩn lời' : 'Xem lời'}</button><button class=${x.mp3.length || E.clips ? '' : 'gold'} onClick=${() => copy(x.text, x.name)}>Copy</button></div>
+        ${show[x.name] && html`<div class="cb" style=${{ marginTop: '8px' }}>${x.text}</div>`}
+        ${x.mp3.map(m => html`<audio controls preload="none" src=${F(m)} style=${{ marginTop: '6px' }}></audio>`)}</div>`)
+        : html`<div class="mute" style=${{ marginTop: '6px' }}>Chưa có gói vbee_ui/. Nhờ Claude tạo gói khi muốn thu trên web VBee.</div>`}</div>
+    <div class="panel"><b>Đưa file giọng vừa tải từ VBee vào tập</b>
+      <p class="mute" style=${{ margin: '4px 0 12px' }}>Trang chỉ chép vào thư mục vbee_ui/ của tập, không xoá file gốc. Chọn tên đích trùng tên phần ở trên (ví dụ ${names[0] || 'c03_SUNG_1.mp3'}), rồi nhắn Claude cắt câu.</p>
+      <div class="row"><input value=${dir} onInput=${e => setDir(e.target.value)} style=${{ width: '420px' }} /><button onClick=${look}>Xem file trong thư mục</button></div>
+      ${R && (R.err ? html`<p style=${{ color: 'var(--cin)' }}>${R.err}. Nếu là Downloads: vào Cài đặt hệ thống → Quyền riêng tư → Tệp và thư mục, cho Terminal truy cập.</p>`
+        : html`<div style=${{ marginTop: '12px' }}><div class="mute">${R.dir} · ${R.files.length} file giọng</div>
+          ${R.files.map(f => html`<div class="row" style=${{ margin: '6px 0' }}><input type="checkbox" checked=${!!(sel[f.name] && sel[f.name].on)} onChange=${e => upd(f.name, 'on', e.target.checked)} />
+            <span style=${{ minWidth: '260px' }}>${f.name}</span><span class="mute">${size(f.size)} · ${ago(f.mtime)}</span><span class="mute">chép thành</span>
+            <input list="vn" value=${(sel[f.name] && sel[f.name].to) || ''} placeholder=${f.name} onInput=${e => upd(f.name, 'to', e.target.value)} style=${{ width: '230px' }} /></div>`)}
+          <datalist id="vn">${names.map(n => html`<option value=${n}></option>`)}</datalist>
+          <button class="gold" style=${{ marginTop: '10px' }} onClick=${go}>Chép file đã chọn vào tập</button></div>`)}</div></div>`;
+}
+
+const Gallery = ({ L, n }) => html`<div class="grid">${L.slice(0, n || 999).map(f => html`<figure><img loading="lazy" src=${F(f.p)} onClick=${() => zoomFn(F(f.p))} /><figcaption>${f.name} · ${ago(f.mtime)}</figcaption></figure>`)}</div>`;
+function Scenes({ E }) {
+  const sheets = E.sheets || [];
+  if (!E.prev.length && !E.hops.length && !sheets.length) return html`<div class="empty">Chưa có ảnh soát (${E.kind === 'kit' ? 'build/<style>/qa/' : 'build/prev/'}).</div>`;
+  return html`<div>${E.prev.length > 0 && html`<h3>Ảnh soát cảnh</h3><${Gallery} L=${E.prev} n=${60} />`}${E.hops.length > 0 && html`<h3>Dò nhân vật nảy</h3><${Gallery} L=${E.hops} />`}
+    ${sheets.length > 0 && html`<h3>Tấm rối và ảnh soát khớp</h3><${Gallery} L=${sheets} />`}${E.docs.plan && html`<h3>Kế hoạch cảnh</h3><${Doc} path=${E.docs.plan.p} />`}</div>`;
+}
+function Video({ E }) {
+  const real = E.videos.filter(v => !v.test), test = E.videos.filter(v => v.test);
+  const V = (v, lab) => html`<div class="panel"><div class="row" style=${{ marginBottom: '10px' }}><b>${lab}</b><span class="sp"></span><span class="mute">${ago(v.mtime)} · ${size(v.size)}</span></div><video controls preload="metadata" src=${F(v.p)}></video><div class="mute" style=${{ marginTop: '6px', wordBreak: 'break-all' }}>${v.p}</div></div>`;
+  if (!E.videos.length) return html`<div class="empty">Chưa có video trong out/ hoặc out/xem/.</div>`;
+  return html`<div><div class="vids">${test[0] ? V(test[0], 'Bản xem thử mới nhất') : html`<div class="empty">Chưa có bản xem thử.</div>`}${real[0] ? V(real[0], 'Bản thật (để đăng)') : html`<div class="empty">Chưa có bản thật.</div>`}</div>
+    ${E.subs.length > 0 && html`<div class="panel row" style=${{ marginTop: '14px' }}><b>Phụ đề</b>${E.subs.map(s => html`<a href=${F(s.p) + '?dl=1'}>${s.name}</a>`)}</div>`}
+    ${test.length + real.length > 2 && html`<h3>Các bản cũ hơn</h3><div class="vids">${[...test.slice(1), ...real.slice(1)].map(v => V(v, v.name))}</div>`}</div>`;
+}
+function Thumbs({ E }) {
+  if (!E.thumbs.length) return html`<div class="empty">Chưa có ảnh bìa (branding/thumb_${E.id}_*.jpg).</div>`;
+  return html`<div class="thumbs">${E.thumbs.map(t => html`<figure style=${{ margin: 0 }}><img src=${F(t.p)} onClick=${() => zoomFn(F(t.p))} /><div class="row" style=${{ marginTop: '6px' }}><b>${t.name}</b><span class="sp"></span><span class="mute">${ago(t.mtime)}</span></div>
+    <div class="row"><img class="mini" src=${F(t.p)} /><span class="mute">cỡ trên trang chủ</span></div></figure>`)}</div>`;
+}
+function Post({ E }) {
+  const [T, setT] = useState(null);
+  useEffect(() => { E.docs.post ? api('/api/text?p=' + encodeURIComponent(E.docs.post.p)).then(setT) : setT(null); }, [E.id]);
+  const blocks = T ? T.text.split(/\n(?=#{1,3} )/) : [];
+  // chỉ copy phần trong khối ``` (tiêu đề, mô tả, tags, comment) — không kèm dấu ``` hay dòng tiêu đề mục
+  const clean = b => { const f = [...b.matchAll(/```[^\n]*\n([\s\S]*?)```/g)].map(m => m[1].replace(/\n+$/, '')); return f.length ? f.join('\n\n') : b.replace(/^#{1,3} .*\n/, '').trim(); };
+  const head = b => (b.match(/^#{1,3} (.*)/) || [])[1] || 'khối này';
+  return html`<div>${E.docs.post ? blocks.map(b => html`<div class="panel"><div class="row"><span class="sp"></span><button class="gold" onClick=${() => copy(clean(b), head(b))}>Copy ${head(b)}</button></div><div class="md" dangerouslySetInnerHTML=${md(b)}></div></div>`) : html`<div class="empty">Chưa có post.md.</div>`}
+    ${E.docs.review && html`<h3>Nhật ký soát</h3><${Doc} path=${E.docs.review.p} />`}
+    ${E.docs.edits && html`<h3>Bạn đã sửa trên trang</h3><${Doc} path=${E.docs.edits.p} />`}</div>`;
+}
+
+const PLATS = ['YouTube', 'TikTok'];
+async function markAllShorts(id, n, on) {
+  if (!confirm(on ? `Tích ĐÃ ĐĂNG YouTube + TikTok cho cả ${n} Short của tập này?` : `Bỏ tích đã đăng của cả ${n} Short?`)) return false;
+  const r = await api('/api/shortmark', { id, all: true, on }); if (r.err) { toastFn(r.err, true); return false; }
+  toastFn(on ? `Đã tích đăng cả ${r.n} Short` : `Đã bỏ tích ${r.n} Short`); return true;
+}
+function Shorts({ id, onChange }) {
+  const [S, setS] = useState(null), [open, setOpen] = useState(false);
+  const load = useCallback(() => api('/api/shorts?id=' + encodeURIComponent(id)).then(setS), [id]);
+  useEffect(() => { load(); }, [load]);
+  if (!S) return html`<div class="mute">Đang tải…</div>`;
+  if (!S.items.length) return html`<div class="empty">Tập này chưa có Shorts. Nhắn Claude "cắt shorts tập ${id}"; xong sẽ có file trong out/shorts_${id}/ và tiêu đề trong shorts_post.md.</div>`;
+  const tick = async (it, plat, on) => { const r = await api('/api/shortmark', { id, key: it.key, platform: plat, on }); if (r.err) return toastFn(r.err, true); toastFn((on ? 'Đã đánh dấu đăng ' : 'Bỏ đánh dấu ') + plat); load(); onChange && onChange(); };
+  const nPost = S.items.filter(i => Object.keys(i.posted).length).length, nCut = S.items.filter(i => i.video).length;
+  return html`<div>
+    <div class="panel row"><div><b>${S.items.length} Shorts</b><div class="mute">${nCut} đã cắt · ${nPost} đã đăng ít nhất một nơi. Đăng xong thì tích ô bên dưới mỗi clip để lần sau biết còn clip nào.</div></div><span class="sp"></span>
+      ${nCut > 0 && (S.items.filter(i => i.video).every(i => PLATS.every(p => i.posted[p]))
+        ? html`<button class="ghost" onClick=${async () => { if (await markAllShorts(id, nCut, false)) { load(); onChange && onChange(); } }}>Bỏ tích tất cả</button>`
+        : html`<button class="gold" onClick=${async () => { if (await markAllShorts(id, nCut, true)) { load(); onChange && onChange(); } }}>Đã đăng tất cả Shorts</button>`)}
+      ${S.intro && html`<button class="ghost" onClick=${() => setOpen(!open)}>${open ? 'Ẩn' : 'Xem'} hướng dẫn đăng</button>`}</div>
+    ${open && html`<div class="panel"><div class="md" dangerouslySetInnerHTML=${md(S.intro)}></div></div>`}
+    ${S.items.map(it => { const done = PLATS.every(p => it.posted[p]);
+      return html`<div class=${'panel short' + (done ? ' done' : '')}>
+      <div>${it.video ? html`<video controls preload="metadata" src=${F(it.video.p)}></video><div class="mute" style=${{ marginTop: '6px' }}>${size(it.video.size)} · ${ago(it.video.mtime)}</div>` : html`<div class="nov">Chưa cắt clip này${it.file ? html`<br/><br/>${it.file}` : ''}</div>`}</div>
+      <div><div class="row"><h4 style=${{ margin: 0, font: '600 18px/1.3 var(--serif)', color: 'var(--gold2)' }}>${it.n != null ? it.n + '. ' : ''}${it.name}</h4></div>
+        ${it.notes.map(n => html`<div class="mute">${n}</div>`)}
+        ${it.blocks.length ? it.blocks.map(b => html`<div style=${{ marginTop: '10px' }}><div class="row"><span class="mute">${b.label}</span><span class="sp"></span><button class=${/tiêu đề|title/i.test(b.label) ? 'gold' : ''} onClick=${() => copy(b.text, b.label)}>Copy</button></div><div class="cb">${b.text}</div></div>`)
+          : html`<div class="mute" style=${{ marginTop: '10px' }}>Chưa có tiêu đề/caption trong shorts_post.md.</div>`}
+        <div class="row" style=${{ marginTop: '4px' }}>${PLATS.map(p => html`<label class="row" style=${{ gap: '6px', cursor: 'pointer' }}><input type="checkbox" checked=${!!it.posted[p]} onChange=${e => tick(it, p, e.target.checked)} />Đã đăng ${p}${it.posted[p] ? html` <span class="mute">(${it.posted[p]})</span>` : ''}</label>`)}</div></div></div>`; })}
+    ${S.post && html`<h3>shorts_post.md</h3><${Doc} path=${S.post} />`}</div>`;
+}
+function ShortsAll({ open }) {
+  const [A, setA] = useState(null); useEffect(() => { api('/api/shortsall').then(setA); }, []);
+  if (!A) return html`<div class="wrap mute">Đang tải…</div>`;
+  return html`<div class="wrap"><div class="head" style=${{ gridTemplateColumns: '1fr' }}><div><h2>Shorts</h2><div class="meta">Các tập có Shorts, tập còn clip chưa đăng ở trên.</div></div></div>
+    <div style=${{ marginTop: '20px' }}>${A.map(x => html`<div class="panel row"><div><b>${x.id}</b><div class="mute">${x.n} mục · ${x.cut} đã cắt · ${x.posted} đã đăng</div></div><span class="sp"></span>
+      ${x.cut < x.n ? html`<span class="pill">thiếu ${x.n - x.cut} file</span>` : x.posted >= x.n ? html`<span class="pill ok">đăng hết</span>` : html`<span class="pill">còn ${x.n - x.posted} chưa đăng</span>`}<button onClick=${() => open(x.id, 'shorts')}>Mở</button></div>`)}</div></div>`;
+}
+
+async function deepGo(id, ask = true) {
+  const D = await api('/api/deep?id=' + encodeURIComponent(id));
+  if (D.err || !D.ok) { toastFn(id + ': ' + (D.err || D.why), true); return null; }
+  if (ask && !confirm(`DỌN SÂU tập ${id} (${size(D.size)})?\n\nBỏ HẾT: mã cảnh, giọng, nhạc, build, video, Shorts (${D.items.length} mục).\nChỉ giữ: kịch bản, dàn ý, bài đăng, episode.yaml, research và ảnh bìa (${D.keep.length} mục).` + (D.shorts_unposted ? `\n\nCHÚ Ý: còn ${D.shorts_unposted} Short chưa tích đã đăng — cũng bị bỏ.` : '') + `\n\nSau này muốn sửa/dựng lại tập này thì phải lấy lại từ Thùng rác trước khi dọn Thùng rác.`)) return null;
+  const r = await api('/api/deepclean', { id }); if (r.err) { toastFn(id + ': ' + r.err, true); return null; }
+  return r;
+}
+function DeepPanel({ id, onDone }) {
+  const [D, setD] = useState(null), [busy, setBusy] = useState(false);
+  useEffect(() => { api('/api/deep?id=' + encodeURIComponent(id)).then(setD); }, [id]);
+  if (!D || D.err || !D.size) return null;
+  return html`<div class="panel row"><div><b>Dọn sâu</b><div class="mute">${D.ok ? `Tập đã đăng: bỏ hết ${D.items.length} mục (mã cảnh, giọng, build, video, Shorts), chỉ giữ kịch bản, bài đăng và ảnh bìa.` : 'Chỉ dùng được khi tập đã đánh dấu "đã đăng".'}</div></div><span class="sp"></span><span class="pill">${size(D.size)}</span>
+    <button class="gold" disabled=${busy || !D.ok} onClick=${async () => { setBusy(true); const r = await deepGo(id); setBusy(false); if (r) { toastFn(`Đã dọn sâu ${id} · ${size(r.freed)}`); onDone && onDone(); setD(null); } }}>${busy ? 'Đang dọn…' : 'Dọn sâu'}</button></div>`;
+}
+function Clean({ id, onDone }) {
+  const [H, setH] = useState(null), [sel, setSel] = useState({}), [busy, setBusy] = useState(false);
+  const load = () => api('/api/heavy?id=' + encodeURIComponent(id)).then(h => { setH(h); setSel({}); });
+  useEffect(() => { load(); }, [id]);
+  if (!H) return html`<div class="mute">Đang đo dung lượng…</div>`;
+  if (!H.items.length) return html`<div><${DeepPanel} id=${id} onDone=${() => { load(); onDone && onDone(); }} /><div class="empty">Tập này không còn file tạm nặng nào.</div></div>`;
+  const total = H.items.reduce((a, x) => a + x.size, 0), chosen = H.items.filter(x => sel[x.p]), cs = chosen.reduce((a, x) => a + x.size, 0);
+  const go = async () => { if (!chosen.length) return; const risky = chosen.filter(x => x.warn);
+    if (!confirm(`Chuyển ${chosen.length} mục (${size(cs)}) vào Thùng rác của macOS?` + (risky.length ? `\n\nCHÚ Ý: có ${risky.length} mục đang được cảnh báo (vd bản đăng khi tập chưa đánh dấu đã đăng).` : '') + `\n\nVẫn khôi phục được từ Thùng rác cho tới khi bạn dọn Thùng rác.`)) return;
+    setBusy(true); const r = await api('/api/trash', { id, paths: chosen.map(x => x.p) }); setBusy(false);
+    if (r.err) return toastFn(r.err, true); toastFn(`Đã chuyển ${r.trashed.length} mục vào Thùng rác · ${size(r.freed)}`); load(); onDone && onDone(); };
+  return html`<div>
+    <${DeepPanel} id=${id} onDone=${() => { load(); onDone && onDone(); }} />
+    <div class="panel row"><div><b>Dọn dung lượng của tập</b><div class="mute">Chỉ liệt kê file tạm và video; không bao giờ đụng mã cảnh, kịch bản, giọng, nhạc. Mục đã chọn được chuyển vào Thùng rác của macOS — dọn Thùng rác thì máy mới nhẹ.</div></div><span class="sp"></span><span class="pill">${size(total)} có thể bỏ</span></div>
+    <div class="panel">${H.items.map(x => html`<label class="row" style=${{ padding: '7px 0', borderBottom: '1px solid var(--line)', cursor: 'pointer' }}>
+      <input type="checkbox" checked=${!!sel[x.p]} onChange=${e => setSel(s => ({ ...s, [x.p]: e.target.checked }))} />
+      <span style=${{ minWidth: '90px', fontWeight: 600 }}>${size(x.size)}</span><span style=${{ flex: 1, wordBreak: 'break-all' }}>${x.p}${x.dir ? '/' : ''}<div class="mute">${x.note}${x.warn ? html` · <span style=${{ color: 'var(--cin)' }}>cẩn thận</span>` : x.keep ? html` · <span style=${{ color: 'var(--gold2)' }}>nên giữ tới khi đăng</span>` : ''} · ${ago(x.mtime)}</div></span></label>`)}
+      <div class="row" style=${{ marginTop: '12px' }}><button onClick=${() => { const s = {}; H.items.filter(x => !x.warn && !x.keep && x.kind !== 'final').forEach(x => s[x.p] = true); setSel(s); }}>Chọn các mục an toàn</button><button class="ghost" onClick=${() => setSel({})}>Bỏ chọn</button><span class="sp"></span>
+        <button class="gold" disabled=${busy || !chosen.length} onClick=${go}>${busy ? 'Đang chuyển…' : `Chuyển vào Thùng rác (${size(cs)})`}</button></div></div></div>`;
+}
+function Disk({ open }) {
+  const [A, setA] = useState(null), [sel, setSel] = useState({}), [withFinal, setWF] = useState(false), [deepOn, setDeep] = useState(false), [busy, setBusy] = useState('');
+  const load = () => api('/api/heavyall').then(a => { setA(a); setSel({}); }); useEffect(() => { load(); }, []);
+  if (!A) return html`<div class="wrap mute">Đang đo dung lượng các tập (có thể mất vài giây)…</div>`;
+  const tot = A.eps.reduce((a, x) => a + x.size, 0) + A.to_delete;
+  const isDeep = x => deepOn && x.status === 'posted' && x.deep > 0;
+  const gain = x => isDeep(x) ? x.deep : x.safe + (withFinal ? x.final : 0);
+  const L = A.eps.filter(x => x.size > 1e6 || x.deep > 1e6), chosen = L.filter(x => sel[x.id]), cs = chosen.reduce((a, x) => a + gain(x), 0);
+  const emptyTD = async () => { if (!confirm(`Chuyển cả thư mục _to_delete (${size(A.to_delete)}) vào Thùng rác của macOS?\n(Bản sao lưu cũ của Claude và trang web nằm ở đây.)`)) return;
+    const r = await api('/api/trash', { id: '_to_delete', paths: ['_to_delete'] }); if (r.err) return toastFn(r.err, true); toastFn('Đã chuyển _to_delete vào Thùng rác · ' + size(r.freed)); load(); };
+  const go = async () => {
+    const dp = chosen.filter(isDeep);
+    if (!chosen.length || !confirm(`Dọn ${chosen.length} tập, khoảng ${size(cs)}?\n\n` + (dp.length ? `DỌN SÂU ${dp.length} tập đã đăng (${dp.map(x => x.id).join(', ')}): bỏ hết mã cảnh, giọng, build, video, Shorts — chỉ giữ kịch bản, bài đăng, ảnh bìa.\n\n` : '') + `Các tập còn lại: chỉ chuyển các mục an toàn${withFinal ? ' và bản đăng của tập ĐÃ ĐĂNG' : ''} vào Thùng rác của macOS. Mục "cẩn thận" và "nên giữ tới khi đăng" được giữ lại.`)) return;
+    let freed = 0, n = 0;
+    for (const x of chosen) {
+      setBusy(`Đang dọn ${x.id}…`);
+      if (isDeep(x)) { const r = await deepGo(x.id, false); if (r) { freed += r.freed; n += r.trashed.length; } continue; }
+      const h = await api('/api/heavy?id=' + encodeURIComponent(x.id));
+      const paths = h.items.filter(i => !i.warn && (i.kind === 'final' ? withFinal && h.status === 'posted' : !i.keep)).map(i => i.p);
+      if (!paths.length) continue;
+      const r = await api('/api/trash', { id: x.id, paths }); if (r.err) { toastFn(x.id + ': ' + r.err, true); continue; }
+      freed += r.freed; n += r.trashed.length;
+    }
+    setBusy(''); toastFn(`Đã chuyển ${n} mục vào Thùng rác · ${size(freed)}`); load(); };
+  const allOn = L.length && L.every(x => sel[x.id]);
+  return html`<div class="wrap"><div class="head" style=${{ gridTemplateColumns: '1fr' }}><div><h2>Dọn máy</h2><div class="meta">File tạm và video có thể bỏ, tổng ${size(tot)}. Mọi thứ đi vào Thùng rác của macOS, dọn Thùng rác thì mới trống ổ.</div></div></div>
+    <div class="panel row" style=${{ marginTop: '20px' }}><div><b>_to_delete/</b><div class="mute">Bản cũ Claude và trang web đã cất đi thay vì xoá.</div></div><span class="sp"></span><span class="pill">${size(A.to_delete)}</span><button class="gold" onClick=${emptyTD} disabled=${!A.to_delete}>Chuyển vào Thùng rác</button></div>
+    ${(() => { const P = A.eps.filter(x => x.status === 'posted' && x.deep > 0), t = P.reduce((a, x) => a + x.deep, 0);
+      return html`<div class="panel row"><div><b>Dọn sâu tập đã đăng</b><div class="mute">${P.length ? `${P.length} tập đã đăng (${P.map(x => x.id).join(', ')}): bỏ hết mã cảnh, giọng, build, video, Shorts; chỉ giữ kịch bản, bài đăng, ảnh bìa.` : 'Chưa có tập nào đánh dấu "đã đăng" còn file để dọn sâu. Đánh dấu đã đăng ở trang của tập trước.'}</div></div><span class="sp"></span><span class="pill">${size(t)}</span>
+        <button class="gold" disabled=${!!busy || !P.length} onClick=${async () => { if (!confirm(`DỌN SÂU ${P.length} tập đã đăng (${size(t)})?\n\n${P.map(x => x.id).join('\n')}\n\nBỏ hết mã cảnh, giọng, nhạc, build, video, Shorts (kể cả Short chưa tích đã đăng). Chỉ giữ kịch bản, dàn ý, bài đăng, episode.yaml, research và ảnh bìa. Vẫn lấy lại được từ Thùng rác cho tới khi dọn Thùng rác.`)) return;
+          let f = 0; for (const x of P) { setBusy(`Đang dọn sâu ${x.id}…`); const r = await deepGo(x.id, false); if (r) f += r.freed; } setBusy(''); toastFn(`Đã dọn sâu ${P.length} tập · ${size(f)}`); load(); }}>${busy || `Dọn sâu ${P.length} tập`}</button></div>`; })()}
+    <div class="panel" style=${{ position: 'sticky', top: 0, zIndex: 5 }}><div class="row">
+      <label class="row" style=${{ gap: '6px', cursor: 'pointer' }}><input type="checkbox" checked=${!!allOn} onChange=${e => { const s = {}; if (e.target.checked) L.forEach(x => s[x.id] = true); setSel(s); }} />Chọn tất cả</label>
+      <label class="row" style=${{ gap: '6px', cursor: 'pointer' }}><input type="checkbox" checked=${withFinal} onChange=${e => setWF(e.target.checked)} />Bỏ cả bản đăng của tập đã đăng</label>
+      <label class="row" style=${{ gap: '6px', cursor: 'pointer' }}><input type="checkbox" checked=${deepOn} onChange=${e => setDeep(e.target.checked)} />Dọn sâu tập đã đăng (chỉ giữ kịch bản + ảnh bìa)</label>
+      <span class="sp"></span><button class="gold" disabled=${!!busy || !chosen.length} onClick=${go}>${busy || `Dọn ${chosen.length} tập đã chọn (${size(cs)})`}</button></div>
+      <div class="mute" style=${{ marginTop: '6px' }}>Dọn nhanh chỉ bỏ các mục an toàn. Mục "cẩn thận" (bản đăng của tập chưa đăng, Shorts chưa tích đăng…) và "nên giữ tới khi đăng" vẫn ở lại; muốn bỏ thì bấm "Xem" để chọn tay.</div></div>
+    ${L.map(x => html`<label class="panel row" style=${{ cursor: 'pointer' }}><input type="checkbox" checked=${!!sel[x.id]} onChange=${e => setSel(s => ({ ...s, [x.id]: e.target.checked }))} />
+      <div><b>${x.id}</b><div class="mute">${x.n} mục · ${x.status || '—'} · ${isDeep(x) ? 'dọn sâu' : 'an toàn'} ${size(gain(x))} / tổng ${size(Math.max(x.size, x.deep || 0))}${x.status === 'posted' && x.deep && !deepOn ? ` · dọn sâu được ${size(x.deep)}` : ''}</div></div><span class="sp"></span>
+      <span class=${'pill' + (gain(x) ? ' ok' : '')}>${size(gain(x))}</span>${x.status === 'posted' && x.deep ? html`<button class="gold" disabled=${!!busy} onClick=${async e => { e.preventDefault(); setBusy(`Đang dọn sâu ${x.id}…`); const r = await deepGo(x.id); setBusy(''); if (r) { toastFn(`Đã dọn sâu ${x.id} · ${size(r.freed)}`); load(); } }}>Dọn sâu ${size(x.deep)}</button>` : ''}<button onClick=${e => { e.preventDefault(); open(x.id, 'clean'); }}>Xem</button></label>`)}</div>`;
+}
+
+// ———————————————— kênh Người que 3D (kiểu 'rick', dự án video/rick-short; gộp 14/11/2026). Một tập = một phim engine/films/<phim>/ ————————————————
+const wordsR = E => E.lines.reduce((a, x) => a + x.text.split(/\s+/).filter(Boolean).length, 0);
+const STEPS_R = [
+  ['idea', 'Đề tài', E => E.status_lines.length ? E.status_lines.length + ' dòng tiến độ' : 'chưa ghi', E => E.status_lines.length > 0],
+  ['script', 'Kịch bản', E => E.docs.script ? E.lines.length + ' câu · ' + num(wordsR(E)) + ' từ' : 'chưa có', E => !!E.docs.script],
+  ['voice', 'Giọng', E => E.voice ? E.voice.dur + ' giây' + (E.voice.placeholder ? ' · giọng tạm' : '') : 'chưa có', E => !!E.voice && !E.voice.placeholder],
+  ['plan', 'Kế hoạch cảnh', E => E.docs.plan ? 'film.json · ' + ago(E.docs.plan.mtime) : 'chưa có', E => !!E.docs.plan],
+  ['scenes', 'Hình', E => E.images.length ? E.images.length + ' ảnh soát' : 'chưa có', E => E.images.length > 0],
+  ['video', 'Video', E => E.videos.some(v => v.final) ? 'có bản chốt' : E.videos.length ? E.videos.length + ' bản' : 'chưa render', E => E.videos.some(v => v.final)],
+  ['review', 'Rà soát', E => E.docs.review ? 'nhật ký · ' + ago(E.docs.review.mtime) : 'chưa rà', E => !!E.docs.review && E.videos.some(v => v.final)],
+  ['thumb', 'Ảnh bìa', E => E.thumbs.length ? E.thumbs.length + ' phương án' : 'chưa có', E => E.thumbs.length > 0],
+  ['post', 'Đăng bài', E => E.docs.post ? 'post.md sẵn' : 'chưa có', E => !!E.docs.post],
+];
+function IdeaR({ E }) {
+  return html`<div><h3 style=${{ marginTop: 0 }}>Nhật ký tiến độ</h3>${E.status_lines.length ? E.status_lines.slice().reverse().map(l => html`<div class="panel mute" style=${{ fontSize: '13.5px' }}>${l.replace(/^- /, '')}</div>`) : html`<div class="mute">STATUS.md của dự án chưa nhắc phim này.</div>`}
+    <div class="panel row" style=${{ marginTop: '14px' }}><div><b>Đề tài và nghiên cứu kênh</b><div class="mute">Kho đề tài, phân tích các kênh cùng thể loại, engine và skill nằm ở nút Tài liệu (cột trái).</div></div><span class="sp"></span><button onClick=${() => { location.hash = CH + '/!docs'; }}>Mở Tài liệu</button></div></div>`;
+}
+function ScriptR({ E }) {
+  const all = E.lines.map(x => x.text).join(' ');
+  return html`<div>${E.lines.length ? html`<div class="panel row"><div><b>Lời đọc từng câu</b><div class="mute">${E.docs.plan ? 'Lấy từ film.json (mỗi câu một dòng của phim, kèm địa điểm).' : 'Lấy từ các nhịp trong script.md.'} Giọng thật chưa chốt; giọng hiện tại là giọng tạm của máy.</div></div><span class="sp"></span><span class="pill">${E.lines.length} câu · ${num(wordsR(E))} từ</span><button class="gold" onClick=${() => copy(all, 'cả lời')}>Copy cả lời</button></div>
+    ${E.lines.map(x => html`<div class="panel"><div class="chap"><div class="row"><h4>${x.name}</h4><span class="pill">${x.text.split(/\s+/).filter(Boolean).length} từ</span></div><button onClick=${() => copy(x.text, x.name)}>Copy</button></div><div class="say">${x.text}</div></div>`)}` : ''}
+    <h3>script.md</h3>${E.docs.script ? html`<${Doc} path=${E.docs.script.p} />` : html`<div class="empty">Chưa có script.md.</div>`}</div>`;
+}
+function VoiceR({ E }) {
+  if (!E.wav && !E.voice) return html`<div class="empty">Chưa có giọng (narration.wav + words.json). Claude tạo giọng tạm bằng engine/tools/voice.py.</div>`;
+  const V = E.voice || {};
+  return html`<div><div class="panel"><div class="row"><b>Giọng đọc của phim</b><span class="sp"></span>${V.dur != null && html`<span class="pill">${V.dur} giây</span><span class="pill">${V.words} từ</span><span class="pill">${V.wpm} từ/phút cả phim</span>`}<span class=${'pill' + (V.placeholder ? '' : ' ok')}>${V.placeholder ? 'giọng tạm của máy' : 'giọng thật'}</span></div>
+    ${E.wav && html`<audio controls preload="none" src=${F(E.wav.p)} style=${{ width: '100%', marginTop: '12px' }}></audio><div class="mute" style=${{ marginTop: '6px' }}>${E.wav.p} · ${ago(E.wav.mtime)}</div>`}
+    <p class="mute" style=${{ marginBottom: 0 }}>Giọng thật cho loại video này chưa chọn. Phim neo theo từng chữ nên đổi giọng chỉ cần render lại.</p></div>
+    ${E.docs.words && html`<h3>Mốc từng chữ (words.json)</h3><${Doc} path=${E.docs.words.p} />`}</div>`;
+}
+function PlanR({ E }) {
+  if (!E.docs.plan) return html`<div class="empty">Chưa có film.json. Kế hoạch cảnh được viết sau khi duyệt kịch bản.</div>`;
+  return html`<div><div class="panel mute">film.json là kế hoạch cảnh của engine: mỗi câu một dòng, gồm địa điểm, nhân vật, bố cục máy và sự kiện diễn. Trang chỉ cho xem; muốn đổi thì nhắn Claude để còn chạy kiểm (lint_film.py, check.mjs).</div><${Doc} path=${E.docs.plan.p} title="film.json" /></div>`;
+}
+const GalleryR = ({ L, n }) => html`<div class="grid">${L.slice(0, n || 999).map(f => html`<figure><img loading="lazy" src=${F(f.p)} onClick=${() => zoomFn(F(f.p))} /><figcaption>${f.sub ? f.sub + '/' : ''}${f.name} · ${ago(f.mtime)}</figcaption></figure>`)}</div>`;
+function ScenesR({ E }) {
+  if (!E.images.length) return html`<div class="empty">Chưa có ảnh soát trong engine/out/${E.id}/.</div>`;
+  const top = E.images.filter(x => !x.sub), sub = E.images.filter(x => x.sub);
+  return html`<div>${top.length > 0 && html`<h3 style=${{ marginTop: 0 }}>Bảng ảnh soát</h3><${GalleryR} L=${top} />`}${sub.length > 0 && html`<h3>Khung rời</h3><${GalleryR} L=${sub} n=${36} />`}${E.chars.length > 0 && html`<h3>Bảng nhân vật chung</h3><${GalleryR} L=${E.chars} />`}</div>`;
+}
+const GateR = ({ g }) => g ? html`<span class=${'gate ' + (g.err ? 'bad' : g.warn ? '' : 'ok')}>cổng: ${g.err} lỗi · ${g.warn} cảnh báo · ${g.sha}</span>` : html`<span class="gate">chưa chạy cổng</span>`;
+function VideoR({ E }) {
+  if (!E.videos.length) return html`<div class="empty">Chưa có video trong engine/out/${E.id}/.</div>`;
+  const fin = E.videos.filter(v => v.final), cmp = E.videos.filter(v => v.cmp), rest = E.videos.filter(v => !v.final && !v.cmp);
+  const V = (v, lab) => html`<div class="panel"><div class="row" style=${{ marginBottom: '10px' }}><b>${lab}</b><span class="sp"></span>${!v.cmp && html`<${GateR} g=${v.gate} />`}<span class="mute">${ago(v.mtime)} · ${size(v.size)}</span></div>
+    <video controls preload="metadata" src=${F(v.p)} style=${{ maxHeight: '70vh', objectFit: 'contain' }}></video><div class="mute" style=${{ marginTop: '6px', wordBreak: 'break-all' }}>${v.p}</div></div>`;
+  const second = rest[0] || cmp[0], more = [...fin.slice(1), ...rest.slice(rest[0] ? 1 : 0), ...cmp.slice(rest[0] ? 0 : 1)];
+  return html`<div><div class="vids">${fin[0] ? V(fin[0], 'Bản chốt (đã qua cổng và rà độc lập)') : html`<div class="empty">Chưa có bản chốt (review_log.md chưa ghi dòng "Bản chốt").</div>`}${second ? V(second, second.cmp ? 'Video so sánh' : 'Bản mới nhất khác') : html`<div class="empty">Không có bản khác.</div>`}</div>
+    ${more.length > 0 && html`<h3>Các bản khác</h3><div class="vids">${more.map(v => V(v, v.cmp ? 'So sánh: ' + v.name : v.name))}</div>`}</div>`;
+}
+function ReviewR({ E }) {
+  const G = E.videos.filter(v => v.gate);
+  return html`<div>${G.length > 0 && html`<div class="panel"><b>Kết quả cổng máy của từng clip</b>${G.map(v => html`<div class="row" style=${{ marginTop: '8px' }}><span style=${{ minWidth: '260px' }}>${v.name}</span><${GateR} g=${v.gate} />${v.final && html`<span class="pill ok">bản chốt</span>`}</div>`)}</div>`}
+    ${E.docs.review ? html`<${Doc} path=${E.docs.review.p} title="Nhật ký rà (review_log.md)" />` : html`<div class="empty">Chưa có review_log.md.</div>`}
+    ${E.docs.edits && html`<h3>Bạn đã sửa trên trang</h3><${Doc} path=${E.docs.edits.p} />`}</div>`;
+}
+function DocsR() {
+  const [G, setG] = useState(null), [cur, setCur] = useState(() => localStorage.getItem('rdoc') || null);
+  useEffect(() => { api('/api/docs').then(g => { setG(g); if (!cur && g[0] && g[0].items[0]) setCur(g[0].items[0].p); }); }, []);
+  if (!G) return html`<div class="wrap mute">Đang tải…</div>`;
+  const pick = p => { setCur(p); localStorage.setItem('rdoc', p); };
+  return html`<div class="wrap"><div class="head" style=${{ gridTemplateColumns: '1fr' }}><div><h2>Tài liệu</h2><div class="meta">Nghiên cứu kênh, phân tích kênh mẫu, engine và skill của loại video người que 3D.</div></div></div>
+    <div class="docs" style=${{ marginTop: '20px' }}><div>${G.map(g => html`<div class="panel"><b>${g.name}</b>${g.items.map(i => html`<button class=${'it' + (cur === i.p ? ' on' : '')} onClick=${() => pick(i.p)}>${i.name}<div class="mute" style=${{ fontSize: '11.5px' }}>${ago(i.mtime)}</div></button>`)}</div>`)}</div>
+      <div>${cur ? html`<${Doc} key=${cur} path=${cur} />` : html`<div class="empty">Chọn một tài liệu.</div>`}</div></div></div>`;
+}
+function EpisodeR({ E, load }) {
+  const [tab, setTab] = useState(localStorage.getItem('rtab') || 'script');
+  const pick = k => { setTab(k); if (k !== 'clean') localStorage.setItem('rtab', k); };
+  const mark = async st => { let link = '';
+    if (st === 'posted') { link = prompt('Dán link video đã đăng (để trống nếu chưa có):', ''); if (link === null) return; }
+    else if (!confirm('Đánh dấu phim này là ĐÃ DUYỆT? (ghi status: approved vào episode.yaml của phim và một dòng STATUS.md)')) return;
+    const r = await api('/api/mark', { id: E.id, status: st, link }); if (r.err) return toastFn(r.err, true); toastFn(st === 'posted' ? 'Đã đánh dấu đã đăng' : 'Đã đánh dấu đã duyệt'); load(); };
+  const body = { idea: html`<${IdeaR} E=${E} />`, script: html`<${ScriptR} E=${E} />`, voice: html`<${VoiceR} E=${E} />`, plan: html`<${PlanR} E=${E} />`, scenes: html`<${ScenesR} E=${E} />`,
+    video: html`<${VideoR} E=${E} />`, review: html`<${ReviewR} E=${E} />`, thumb: html`<${Thumbs} E=${E} />`, post: html`<${Post} E=${E} />`, clean: html`<${Clean} id=${E.id} onDone=${load} />` }[tab] || html`<${ScriptR} E=${E} />`;
+  const last = E.status_lines[E.status_lines.length - 1], cov = E.thumbs[0] || E.images.find(x => !x.sub);
+  return html`<div class="wrap">
+    <div class="head"><div><h2>${E.title}</h2><div class="meta">${E.id} · ${E.status || 'chưa ghi trạng thái'}${E.note ? ' · ' + E.note : ''}</div>
+      ${last && html`<div class="note">${last.replace(/^- /, '').slice(0, 360)}${last.length > 360 ? '…' : ''}</div>`}<div class="row" style=${{ marginTop: '12px' }}>
+        ${E.status === 'approved' || E.status === 'posted' ? html`<span class="pill ok">${E.status === 'posted' ? 'Đã đăng' : 'Đã duyệt'}</span>` : ''}
+        ${E.status !== 'posted' && E.status !== 'approved' && html`<button class="gold" onClick=${() => mark('approved')}>Đánh dấu đã duyệt</button>`}
+        ${E.status !== 'posted' && html`<button class=${E.status === 'approved' ? 'gold' : ''} onClick=${() => mark('posted')}>Đánh dấu đã đăng</button>`}
+        <button class=${tab === 'clean' ? 'gold' : 'ghost'} onClick=${() => pick('clean')}>Dọn dung lượng</button><button class="ghost" onClick=${load}>Tải lại phim</button></div></div>
+      ${cov ? html`<div class="cover" style=${{ backgroundImage: `url("${F(cov.p)}")`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundColor: 'var(--ink)' }} onClick=${() => zoomFn(F(cov.p))}></div>` : html`<div class="cover empty" style=${{ display: 'grid', placeItems: 'center' }}>Chưa có ảnh</div>`}</div>
+    <nav class="steps">${STEPS_R.map(([k, t, s, d], i) => html`<button class=${'step' + (d(E) ? ' done' : '') + (tab === k ? ' on' : '')} onClick=${() => pick(k)}><span class="n">${i + 1}</span><span class="t">${t}</span><span class="s">${s(E)}</span></button>`)}</nav>
+    ${body}</div>`;
+}
+
+function Episode({ id }) {
+  const [E, setE] = useState(null), [tab, setTab] = useState(localStorage.getItem('tab2') || 'script');
+  useEffect(() => { if (localStorage.getItem('tab2') === 'clean') localStorage.setItem('tab2', 'script'); }, []);
+  const load = useCallback(() => api('/api/ep?id=' + encodeURIComponent(id)).then(setE), [id]);
+  useEffect(() => { setE(null); load(); }, [load]);
+  if (!E) return html`<div class="wrap mute">Đang tải…</div>`;
+  if (E.err) return html`<div class="wrap empty">${E.err}</div>`;
+  if (E.kind === 'rick') return html`<${EpisodeR} E=${E} load=${load} />`;   // kênh Người que 3D: 9 công đoạn riêng
+  const pick = k => { setTab(k); if (k !== 'clean') localStorage.setItem('tab2', k); };
+  const mark = async st => { let link = '';
+    if (st === 'posted') { link = prompt('Dán link video đã đăng (để trống nếu chưa có):', ''); if (link === null) return; }
+    else if (!confirm('Đánh dấu tập này là ĐÃ DUYỆT? (ghi status: approved vào episode.yaml' + (E.kind === 'kit' ? '' : ', backlog.csv') + ' và một dòng STATUS.md)')) return;
+    const r = await api('/api/mark', { id: E.id, status: st, link }); if (r.err) return toastFn(r.err, true); toastFn(st === 'posted' ? 'Đã đánh dấu đã đăng' : 'Đã đánh dấu đã duyệt'); load(); };
+  const body = { idea: html`<${Idea} E=${E} />`, outline: E.docs.outline ? html`<${Doc} path=${E.docs.outline.p} />` : html`<div class="empty">Chưa có outline.md.</div>`, script: html`<${Script} E=${E} />`,
+    clean: html`<${Clean} id=${E.id} />`, voice: html`<${Voice} E=${E} reload=${load} />`, scenes: html`<${Scenes} E=${E} />`, video: html`<${Video} E=${E} />`, thumb: html`<${Thumbs} E=${E} />`, post: html`<${Post} E=${E} />`, shorts: html`<${Shorts} key=${E.shorts_done} id=${E.id} onChange=${load} />` }[tab];
+  const last = E.status_lines[E.status_lines.length - 1];
+  return html`<div class="wrap">
+    <div class="head"><div><h2>${E.title}</h2><div class="meta">${E.id} · ${E.status || 'chưa ghi trạng thái'}${E.music_gain != null ? ' · nhạc nền ' + E.music_gain + ' dB' : ''}</div>
+      ${last && html`<div class="note">${last.replace(/^- /, '').slice(0, 320)}${last.length > 320 ? '…' : ''}</div>`}<div class="row" style=${{ marginTop: '12px' }}>
+        ${E.status === 'approved' || E.status === 'posted' ? html`<span class="pill ok">${E.status === 'posted' ? 'Đã đăng' : 'Đã duyệt'}</span>` : ''}
+        ${E.status !== 'posted' && E.status !== 'approved' && html`<button class="gold" onClick=${() => mark('approved')}>Đánh dấu đã duyệt</button>`}
+        ${E.status !== 'posted' && html`<button class=${E.status === 'approved' ? 'gold' : ''} onClick=${() => mark('posted')}>Đánh dấu đã đăng</button>`}
+        ${E.shorts_n > 0 && (E.shorts_done >= E.shorts_n ? html`<span class="pill ok">Shorts đã đăng hết</span>`
+          : html`<button onClick=${async () => { if (await markAllShorts(E.id, E.shorts_n, true)) load(); }}>Đã đăng tất cả Shorts (${E.shorts_done}/${E.shorts_n})</button>`)}
+        <button class=${tab === 'clean' ? 'gold' : 'ghost'} onClick=${() => pick('clean')}>Dọn dung lượng</button><button class="ghost" onClick=${load}>Tải lại tập</button></div></div>
+      ${E.thumbs[0] ? html`<div class="cover" style=${{ backgroundImage: `url("${F(E.thumbs[0].p)}")` }} onClick=${() => zoomFn(F(E.thumbs[0].p))}></div>` : html`<div class="cover empty" style=${{ display: 'grid', placeItems: 'center' }}>Chưa có ảnh bìa</div>`}</div>
+    <nav class="steps">${STEPS.map(([k, t, s, d], i) => html`<button class=${'step' + (d(E) ? ' done' : '') + (tab === k ? ' on' : '')} onClick=${() => pick(k)}><span class="n">${i + 1}</span><span class="t">${t}</span><span class="s">${s(E)}</span></button>`)}</nav>
+    ${body}</div>`;
+}
+
+function Recent({ open }) {
+  const [R, setR] = useState(null); useEffect(() => { api('/api/recent').then(setR); }, []);
+  if (!R) return html`<div class="wrap mute">Đang tải…</div>`;
+  const epOf = f => (f.p.match(/^episodes\/([^/]+)\//) || f.p.match(/^engine\/(?:films|out)\/((?!chars\/)[^/]+)\//) || f.name.match(/^thumb_(.+?)_[A-Za-z0-9]+\.jpg$/) || f.name.match(/^(.+?)(_bio-long|_v\d)/) || [])[1];
+  return html`<div class="wrap"><div class="head" style=${{ gridTemplateColumns: '1fr' }}><div><h2>Mới làm gần đây</h2><div class="meta">Video, ảnh bìa, ảnh soát và tài liệu vừa thay đổi, mới nhất trước.</div></div></div>
+    <div class="feed" style=${{ marginTop: '22px' }}>${R.map(f => { const ext = f.name.split('.').pop().toLowerCase(), ep = epOf(f);
+      return html`<div class="panel"><div class="row"><b>${f.name}</b></div><div class="mute">${ago(f.mtime)} · ${size(f.size)}</div>
+        ${['jpg', 'png'].includes(ext) ? html`<img loading="lazy" src=${F(f.p)} onClick=${() => zoomFn(F(f.p))} />` : ext === 'mp4' ? html`<video controls preload="none" src=${F(f.p)}></video>` : CH === 'rick-short' && ['md', 'csv'].includes(ext) ? html`<div class="row"><button onClick=${() => { localStorage.setItem('rdoc', f.p); location.hash = CH + '/!docs'; }}>Xem trong trang</button><a href=${F(f.p)} target="_blank">Mở file thô</a></div>` : html`<a href=${F(f.p)} target="_blank">Mở file</a>`}
+        ${ep && html`<div><button onClick=${() => open(ep)}>Mở tập ${ep}</button></div>`}</div>`; })}</div></div>`;
+}
+
+function App() {
+  // địa chỉ: #<kênh>/<tập>  (link cũ #<tập> không có kênh = Kênh Mẫu)
+  const parse = () => { const h = decodeURIComponent(location.hash.slice(1)), i = h.indexOf('/');
+    if (i > 0) return [h.slice(0, i), h.slice(i + 1) || null];
+    return h ? ['example', h] : [localStorage.getItem('ch') || 'example', null]; };
+  const [chans, setChans] = useState([{ id: 'example', name: 'Kênh Mẫu' }]), [loc, setLoc] = useState(parse), [eps, setEps] = useState({ ch: null, L: [] }), [q, setQ] = useState(''), [toast, setToast] = useState(null), [zoom, setZoom] = useState(null);
+  const [ch, cur] = loc; CH = ch;
+  toastFn = (m, bad) => { setToast({ m, bad }); clearTimeout(toastFn.h); toastFn.h = setTimeout(() => setToast(null), 2600); }; zoomFn = setZoom;
+  useEffect(() => { fetch('/api/channels').then(r => r.json()).then(c => { if (Array.isArray(c) && c.length) setChans(c); }); const h = () => setLoc(parse()); addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
+  useEffect(() => { CH = ch; localStorage.setItem('ch', ch); api('/api/episodes').then(r => Array.isArray(r) && CH === ch && setEps({ ch, L: r })); document.title = (chans.find(c => c.id === ch) || {}).name + ' · Studio'; }, [ch, chans]);
+  useEffect(() => { const k = e => e.key === 'Escape' && setZoom(null); addEventListener('keydown', k); return () => removeEventListener('keydown', k); }, []);
+  const go = (c, id) => { location.hash = c + '/' + (id || ''); setLoc([c, id || null]); };
+  const open = id => go(ch, id);
+  const L = (eps.ch === ch ? eps.L : []).filter(e => !q || (e.id + ' ' + e.title).toLowerCase().includes(q.toLowerCase()));   // danh sách của kênh khác thì không vẽ (ảnh sẽ trỏ sai kênh)
+  const name = (chans.find(c => c.id === ch) || {}).name || ch, rick = (chans.find(c => c.id === ch) || {}).kind === 'rick';   // kênh Người que 3D: nút Shorts thành Tài liệu
+  return html`<div class="app">
+    <aside><div class="chans">${chans.map(c => html`<button class=${c.id === ch ? 'on' : ''} onClick=${() => { setQ(''); go(c.id, null); }}>${c.name}</button>`)}</div>
+      <div class="brand"><h1>${name}</h1><span>studio</span></div>
+      <div class="navbtn"><button class=${!cur ? 'gold' : ''} onClick=${() => open(null)}>Mới nhất</button>${rick ? html`<button class=${cur === '!docs' ? 'gold' : ''} onClick=${() => open('!docs')}>Tài liệu</button>` : html`<button class=${cur === '!shorts' ? 'gold' : ''} onClick=${() => open('!shorts')}>Shorts</button>`}<button class=${cur === '!disk' ? 'gold' : ''} onClick=${() => open('!disk')}>Dọn máy</button></div>
+      <div class="search"><input placeholder="Tìm tập theo tên" value=${q} onInput=${e => setQ(e.target.value)} /></div>
+      <div class="list">${L.map(e => html`<button class=${'ep' + (cur === e.id ? ' on' : '')} onClick=${() => open(e.id)}><span class="th" style=${e.thumb ? { backgroundImage: `url("${F(e.thumb)}")` } : {}}></span>
+        <span><b>${e.title}</b><small>${e.status || '—'} · ${ago(e.mtime)}</small></span></button>`)}</div></aside>
+    <main key=${ch}>${cur === '!docs' ? html`<${DocsR} />` : cur === '!shorts' ? html`<${ShortsAll} open=${(id, t) => { if (t) localStorage.setItem('tab2', t); open(id); }} />` : cur === '!disk' ? html`<${Disk} open=${(id, t) => { if (t) localStorage.setItem('tab2', t); open(id); }} />` : cur ? html`<${Episode} key=${ch + '/' + cur} id=${cur} />` : html`<${Recent} key=${ch} open=${open} />`}</main>
+    ${zoom && html`<div class="lb" onClick=${() => setZoom(null)}><img src=${zoom} /></div>`}
+    ${toast && html`<div class=${'toast' + (toast.bad ? ' bad' : '')}>${toast.m}</div>`}</div>`;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App} />`);
+</script></body></html>

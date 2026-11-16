@@ -1,0 +1,50 @@
+# Long ≥ 8 phút, ngang 16:9 — YouTube, đủ điều kiện chèn quảng cáo giữa video (mid-roll)
+# YouTube: video đã bật kiếm tiền và dài từ 8:00 trở lên mới chèn được mid-roll
+# (https://support.google.com/youtube/answer/6175006). Ta nhắm 8:30–11:00 để có biên an toàn khi cắt sửa.
+id: long-8min
+size: [1920, 1080]
+fps: 30
+duration_s: [510, 660]        # QA báo lỗi nếu < 8:00 (monetization.midroll_min_s), cảnh báo nếu ngoài khung này
+pauses: {sentence: 0.4, line: 0.5, shot: 0.7, chapter: 1.4}   # chapter = khoảng lặng dài trước mỗi chương → chỗ ngắt QC tự nhiên
+chars_per_second: 20
+budget_chars: [7400, 10000]   # ký tự lời thoại vừa ~8:30–11:00 với các khoảng nghỉ trên
+max_shot_s: 20                # shot dài hơn → QA cảnh báo (video dài vẫn cần đổi hình liên tục)
+
+monetization:
+  midroll_min_s: 480          # dưới mức này YouTube không cho mid-roll → QA báo lỗi
+  ad_breaks:                  # build/youtube.md gợi ý vị trí đặt thủ công trong YouTube Studio
+    first_after_s: 90         # không chèn quá sớm (người xem chưa "vào")
+    min_gap_s: 150            # ~2,5 phút một lần — dày hơn làm tụt giữ chân
+    last_before_end_s: 45
+    at: chapter               # chỉ đặt ở đầu chương (khoảng lặng chapter) hoặc shot có `ad_break: true`
+
+chapters:                     # shot nào có `chapter: "Tên"` là bắt đầu chương mới
+  required: true
+  first_title: "Mở đầu"       # YouTube bắt buộc mốc 0:00
+  min_count: 4                # YouTube cần ≥ 3 mốc; ta dùng 4-7 chương
+  min_len_s: 10               # YouTube: mỗi chương ≥ 10 giây
+
+# Beat sheet ~9 phút. Mỗi chương là một "short dài": đủ ý, có câu đùa, kết bằng câu móc sang chương sau
+# (người xem nghe câu móc ngay trước quảng cáo → ít bỏ đi hơn).
+beats:
+  - {name: cold_open, seconds: [0, 25],    job: "khoảnh khắc sốc nhất của cả video, chưa giải thích + lời hứa 'cuối video có…'"}
+  - {name: intro,     seconds: [25, 50],   job: "Shiba chào, câu hỏi của video, điểm danh nhanh các chương"}
+  - {name: chapter1,  seconds: [50, 150],  job: "ý 1: bối cảnh → dữ kiện → so sánh đời thường → câu đùa → câu móc"}
+  - {name: chapter2,  seconds: [150, 260], job: "ý 2, cùng công thức"}
+  - {name: chapter3,  seconds: [260, 370], job: "ý 3 / cơ chế 'nó làm thế nào' (cảnh vẽ chi tiết, từng bước)"}
+  - {name: chapter4,  seconds: [370, 470], job: "bằng chứng thật: năm, địa điểm, nghiên cứu (map, bar_chart, number_reveal)"}
+  - {name: myth,      seconds: [470, 530], job: "hiểu lầm phổ biến / câu hỏi người xem hay hỏi"}
+  - {name: payoff,    seconds: [530, 570], job: "tóm 3 ý trong 3 câu + câu chốt hài + CTA (đăng ký, video tiếp theo)"}
+rules:
+  - "KHÔNG kéo dài cho đủ 8 phút: thêm ý thật (chương mới), không thêm câu thừa — giữ chân người xem quan trọng hơn số phút"
+  - "mỗi chương mở bằng title_card (shot có `chapter:`), kết bằng câu móc"
+  - "mỗi shot 5-20 giây; cứ ~30 giây phải có một câu đùa hoặc một hình bất ngờ"
+  - "cách làm nhanh: gộp 4-6 chủ đề short cùng chủ đề lớn thành một video dài (mỗi short = một chương, viết lại cho sâu hơn)"
+
+layout:
+  title_box: null
+  chapter_tag: {x: 40, y: 54, size: 40}   # nhãn chương nhỏ góc trên trái (ẩn khi đang chiếu title_card)
+  sticker:   {y: 120, size: 56, max_words: 6, fill: "#FAD93C"}
+  subtitles: {y: 1022, size: 50, max_chars: 46}
+  content:   {zoom: 1.0, center_y: 540, floor_y: 929, push: 0.03}
+  safe_bottom: 1080

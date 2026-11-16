@@ -1,0 +1,24 @@
+# Long ~3 phút, ngang 16:9 — YouTube, cho style "phẳng" (flat-v1 / kiểu Kurzgesagt). Có phụ đề cứng (kênh mẫu Vẽ Chuyện không có, người dùng muốn có):
+# chữ trên hình là thẻ đen, nhãn từ khoá (stickers → keyword) và mốc thời gian do cảnh tự vẽ.
+# Dưới 8 phút → không chèn được quảng cáo giữa video (muốn mid-roll: long-8min).
+id: long-3min
+size: [1920, 1080]
+fps: 30
+duration_s: [150, 240]
+pauses: {sentence: 0.45, line: 0.6, shot: 0.8}
+chars_per_second: 17          # VBee Minh Quân @1.1 (ước lượng; `audio` cho số thật)
+budget_chars: [2000, 3200]
+max_shot_s: 12                # kênh mẫu đổi hình 2–4 s; một shot ≤ 12 s, trong shot phải có chuyển động/nhịp mới
+beats:
+  - {name: cold_open, seconds: [0, 20],    job: "kết cục kịch tính nhất, chưa giải thích (khuôn A) / nghịch lý (khuôn C)"}
+  - {name: rewind,    seconds: [20, 50],   job: "thẻ đen 'X trước' → cảnh đời thường mở chuyện"}
+  - {name: mechanism, seconds: [50, 110],  job: "phóng to: thủ phạm, cơ chế từng bước, 1 so sánh đời thường"}
+  - {name: escalate,  seconds: [110, 150], job: "mốc thời gian, triệu chứng/hậu quả tăng dần, số liệu có nguồn"}
+  - {name: twist,     seconds: [150, 175], job: "'nếu…' tua lại các kết thúc khác + bóc 1 hiểu lầm"}
+  - {name: payoff,    seconds: [175, 190], job: "bài học dùng được + câu chốt đùa"}
+layout:
+  title_box: null
+  sticker:   {x: 960, y: 900, size: 120}     # stickers = nhãn từ khoá IN HOA (keyword) — shot có thể ghi x/y riêng
+  subtitles: {y: 1000, size: 44, max_chars: 52}   # phụ đề (người dùng yêu cầu 2026-10-05); null = tắt
+  content:   {zoom: 1.0, center_y: 540, floor_y: 900, push: 0.0}   # camera moves are drawn by the scenes (camera())
+  safe_bottom: 1080

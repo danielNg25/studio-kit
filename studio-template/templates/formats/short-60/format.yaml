@@ -1,0 +1,31 @@
+# Short ~60s, vertical — TikTok / Facebook Reels / YouTube Shorts
+id: short-60
+size: [1080, 1920]
+fps: 30
+duration_s: [55, 65]          # chỉ THAM KHẢO (người dùng 2026-10-05: 30s cũng được) — QA không cảnh báo
+duration_hard: false          # true = QA cảnh báo khi ra ngoài khoảng duration_s
+pauses: {sentence: 0.35, line: 0.45, shot: 0.6}
+chars_per_second: 20          # VBee at 1.1x, used for planning + silent previews
+budget_chars: [850, 1000]     # spoken characters that fit in ~60s with pauses
+
+# Beat sheet — every episode in this format should follow it (QA checks shot count, not wording)
+beats:
+  - {name: hook,     seconds: [0, 3],   job: "một câu gây sốc / ngược đời, không giải thích"}
+  - {name: question, seconds: [3, 8],   job: "đặt câu hỏi của video, trùng với title_box"}
+  - {name: point1,   seconds: [8, 25],  job: "bối cảnh → dữ kiện → so sánh đời thường → câu đùa"}
+  - {name: point2,   seconds: [25, 42], job: "như point1; tối đa 2-3 ý cho cả video"}
+  - {name: twist,    seconds: [42, 55], job: "điều bất ngờ nhất, có số liệu"}
+  - {name: payoff,   seconds: [55, 62], job: "câu chốt hài + CTA"}
+rules:
+  - "mỗi ý phải đủ 3 bước: dựng - nói - cho thấy; không nhảy cóc"
+  - "mỗi shot 4-12 giây; một hình chính mỗi shot"
+  - "sticker ≤ 6 chữ, đổi theo ý đang nói"
+
+layout:
+  title_box: {y: 170, w: 860, h: 190, size: 70}
+  sticker:   {y: 1430, size: 64, max_words: 6, fill: "#FAD93C"}
+  subtitles: {y: 1545, size: 66, max_chars: 24}
+  # screen_y: where content y=center_y lands on screen. 801 puts the floor line (1130) at ~1340 of 1920, so the scene sits
+  # mid-screen and the ground strip below holds sticker + subtitles (was 640 → floor at ~1180; user: ground too tall, 2026-10-05)
+  content:   {zoom: 1.1, center_y: 640, screen_y: 801, floor_y: 1130, push: 0.04}
+  safe_bottom: 1600             # keep text above platform UI

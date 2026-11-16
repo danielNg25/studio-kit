@@ -1,0 +1,22 @@
+# Threads card ~60s, vertical — đọc lại bài Threads: khung bài ở giữa + giọng đọc + nền chuyển động (+ nhạc nền, hiệu ứng, meme)
+# Dựng từ bản thử 2026-10-06 (bài @manhdayum). Mẫu cảnh `threads_card` nằm trong layout.js của format này.
+id: threads-60
+size: [1080, 1920]
+fps: 30
+duration_s: [45, 75]
+duration_hard: false
+pauses: {sentence: 0.3, line: 0.4, shot: 0.6}
+chars_per_second: 20
+budget_chars: [800, 1200]
+max_shot_s: 20               # khung bài dài được phép đứng lâu hơn short-60
+rules:
+  - "chữ trong khung = NGUYÊN VĂN bài gốc; lời đọc (lines) = cùng nội dung nhưng viết rõ chữ tắt, bỏ (1)(2) để VBee đọc trôi"
+  - "ghi công tác giả gốc (tên trong khung + caption); che bớt tên người bình luận bình thường (vd ngoc.b•••); avatar = chữ cái đầu"
+  - "mỗi video nên có phần riêng của kênh (câu mở/câu chốt/lời khuyên thêm có nguồn) — tránh bị xếp 'nội dung không nguyên bản'"
+  - "bỏ chi tiết nhạy cảm về nạn nhân/người thật dù bài gốc có"
+layout:
+  title_box: null
+  sticker: null
+  subtitles: null            # chữ đã nằm trong khung bài
+  content: {zoom: 1.0, center_y: 960, floor_y: 1720, push: 0}
+  safe_bottom: 1600

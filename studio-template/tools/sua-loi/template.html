@@ -1,0 +1,311 @@
+<title>__PAGE_TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Pangolin&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: một cột kịch bản như bản in của biên tập viên — câu gốc in mực, ô viết lại ngay dưới; thanh trên cùng giữ tiến độ + nút xuất */
+:root{
+  --paper:#F6F5F1; --sheet:#FFFFFF; --ink:#1E2126; --ink2:#5C626C; --rule:#E2E0D8;
+  --seal:#A3322A; --seal-soft:#F6E3E0; --done:#2F6B4F; --done-soft:#E2F0E8; --cut:#8A8F98;
+  --field:#FBFBF9; --focus:#2D5BA8;
+  --f-body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-hand:'Pangolin','Be Vietnam Pro',cursive;
+  --f-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#16181C; --sheet:#1E2126; --ink:#ECEAE4; --ink2:#A3A8B0; --rule:#30343B;
+  --seal:#E0786C; --seal-soft:#3A2422; --done:#7FC4A0; --done-soft:#1E3329; --cut:#7D828B;
+  --field:#191B20; --focus:#8CB0EE; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#16181C; --sheet:#1E2126; --ink:#ECEAE4; --ink2:#A3A8B0; --rule:#30343B;
+  --seal:#E0786C; --seal-soft:#3A2422; --done:#7FC4A0; --done-soft:#1E3329; --cut:#7D828B;
+  --field:#191B20; --focus:#8CB0EE; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sheet)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sheet);border-bottom:1px solid var(--rule)}
+.bar-in{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--f-hand);font-size:24px;line-height:1;margin-right:auto;display:flex;align-items:center;gap:10px}
+.stamp{font-family:var(--f-body);font-weight:700;font-size:11px;letter-spacing:.08em;color:var(--seal);border:1.5px solid var(--seal);border-radius:3px;padding:2px 6px;transform:rotate(-3deg)}
+.prog{font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.prog b{color:var(--ink)}
+button{font:inherit;font-size:14px;font-weight:600;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);padding:8px 14px;cursor:pointer}
+button:hover{border-color:var(--ink2)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button.primary{background:var(--seal);border-color:var(--seal);color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.primary{color:#1E2126}}
+:root[data-theme="dark"] button.primary{color:#1E2126}
+button.ghost{border-color:transparent;background:transparent;color:var(--ink2);padding:6px 8px;font-weight:500}
+button.ghost:hover{color:var(--ink)}
+.intro{margin:22px 0 10px;color:var(--ink2);font-size:14px;max-width:65ch}
+details.paste{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;margin-bottom:18px}
+details.paste summary{cursor:pointer;padding:12px 14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.paste summary::-webkit-details-marker{display:none}
+details.paste summary span{color:var(--ink2);font-weight:400;font-size:13px}
+.paste-body{padding:0 14px 14px;display:grid;gap:10px}
+#src{width:100%;min-height:180px;resize:vertical;font:13px/1.5 var(--f-mono);background:var(--field);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:10px}
+.opts{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:14px}
+.opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px}
+.chip{font-size:13px;font-weight:500;border-radius:999px;padding:5px 12px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.chapter{font-family:var(--f-hand);font-size:22px;margin:28px 0 8px;text-wrap:balance;display:flex;align-items:baseline;gap:10px}
+.chapter small{font-family:var(--f-body);font-size:12px;color:var(--ink2);letter-spacing:.06em;text-transform:uppercase}
+.item{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:grid;gap:8px}
+.item.changed{border-left:4px solid var(--seal)}
+.item.cut{border-left:4px solid var(--cut)}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink2)}
+.id{font-family:var(--f-mono);font-size:12px}
+.who{font-weight:600;border-radius:4px;padding:1px 7px;background:var(--done-soft);color:var(--done)}
+.who.char{background:var(--seal-soft);color:var(--seal)}
+.flag{margin-left:auto;font-weight:600}
+.flag.c{color:var(--seal)} .flag.x{color:var(--cut)}
+.orig{font-size:17px;line-height:1.6;max-width:70ch}
+.item.cut .orig{text-decoration:line-through;color:var(--cut)}
+.re{width:100%;resize:none;overflow:hidden;min-height:44px;font:16px/1.55 var(--f-body);color:var(--ink);background:var(--field);border:1px dashed var(--rule);border-radius:8px;padding:9px 11px}
+.re:focus{border-style:solid;border-color:var(--focus)}
+.re::placeholder{color:var(--ink2);opacity:.75}
+.row{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap}
+.empty{background:var(--sheet);border:1px dashed var(--rule);border-radius:10px;padding:24px;text-align:center;color:var(--ink2)}
+.note{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;margin-top:22px;display:grid;gap:8px}
+.note label{font-weight:600}
+#gnote{width:100%;min-height:80px;resize:vertical;font:15px/1.55 var(--f-body);background:var(--field);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:9px 11px}
+dialog{border:1px solid var(--rule);border-radius:12px;background:var(--sheet);color:var(--ink);width:min(760px,calc(100vw - 32px));padding:0}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.dlg-h h2{margin:0;font-size:17px}
+.dlg-b{padding:12px 14px;display:grid;gap:10px}
+#out{width:100%;min-height:50vh;font:13px/1.5 var(--f-mono);background:var(--field);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:10px;resize:vertical}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--sheet);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+@media (max-width:520px){.brand{font-size:20px}.orig{font-size:16px}.flag{margin-left:0}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<header class="bar"><div class="bar-in">
+  <div class="brand">Bàn Sửa Lời <span class="stamp">__STAMP__</span></div>
+  <div class="prog" id="prog"></div>
+  <button class="primary" id="btnExport" type="button">Xuất kết quả</button>
+</div></header>
+
+<main class="wrap">
+  <p class="intro">Dán kịch bản vào ô bên dưới, mỗi câu hiện kèm một ô để bạn viết lại. Ô nào để trống là giữ nguyên câu cũ. Bấm <b>Xuất kết quả</b> rồi sao chép, dán lại vào cuộc trò chuyện. Bản nháp tự lưu trong trình duyệt này.</p>
+
+  <details class="paste" id="pasteBox">
+    <summary>Kịch bản đang sửa <span id="srcInfo"></span></summary>
+    <div class="paste-body">
+      <textarea id="src" spellcheck="false" aria-label="Kịch bản"></textarea>
+      <div class="opts">
+        <label><input type="radio" name="unit" id="unitSent" value="sent" checked> Tách từng câu</label>
+        <label><input type="radio" name="unit" id="unitLine" value="line"> Giữ nguyên từng đoạn</label>
+        <label><input type="checkbox" id="optChars" checked> Hiện cả thoại nhân vật</label>
+        <button type="button" id="btnLoad">Nạp kịch bản này</button>
+        <button type="button" class="ghost" id="btnSample">Nạp lại bản gốc</button>
+      </div>
+    </div>
+  </details>
+
+  <div class="filters" role="group" aria-label="Lọc">
+    <button type="button" class="chip" data-f="all" aria-pressed="true">Tất cả</button>
+    <button type="button" class="chip" data-f="todo" aria-pressed="false">Chưa sửa</button>
+    <button type="button" class="chip" data-f="done" aria-pressed="false">Đã sửa / bỏ</button>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="note">
+    <label for="gnote">Ghi chú chung (tuỳ chọn)</label>
+    <textarea id="gnote" placeholder="Ví dụ: cả bài đọc chậm lại, đoạn Laffrey cần gay cấn hơn…"></textarea>
+  </div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-h">
+    <h2 id="dlgTitle">Kết quả để dán vào chat</h2>
+    <div class="opts">
+      <label><input type="radio" name="fmt" value="diff" checked> Chỉ câu đã sửa</label>
+      <label><input type="radio" name="fmt" value="full"> Cả kịch bản sau khi sửa</label>
+    </div>
+  </div>
+  <div class="dlg-b">
+    <textarea id="out" readonly aria-label="Kết quả"></textarea>
+    <div class="row">
+      <button type="button" id="btnClose">Đóng</button>
+      <button type="button" class="primary" id="btnCopy">Sao chép</button>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const SAMPLE = __SAMPLE__;
+const STORE_NS = __NS__;
+const $ = s => document.querySelector(s);
+const store = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let ITEMS = [], EDITS = {}, KEY = '', FILTER = 'all', TITLE = '';
+
+function hash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+
+function splitSentences(t){
+  // tách theo . ? ! … rồi khoảng trắng + chữ hoa/số/ngoặc; không tách số thập phân, viết tắt kiểu "St Helena"
+  const out = []; const re = /[^.?!…]+(?:[.?!…]+["”’)]*|$)/g; let m, buf = '';
+  const parts = (t.match(re) || [t]).map(x => x.trim()).filter(Boolean);
+  for (const p of parts){
+    buf = buf ? buf + ' ' + p : p;
+    if (/[.?!…]["”’)]*$/.test(p) || p === parts[parts.length - 1]) { out.push(buf); buf = ''; }
+  }
+  if (buf) out.push(buf);
+  return out.length ? out : [t];
+}
+
+function parse(text, unit, withChars){
+  const lines = text.replace(/\r/g, '').split('\n');
+  const items = []; let chapter = '', n = 0, title = '';
+  for (let raw of lines){
+    const l = raw.trim();
+    if (!l) continue;
+    if (/^#\s/.test(l)){ title = l.replace(/^#\s*/, ''); continue; }
+    if (/^##\s/.test(l)){
+      const h = l.replace(/^##\s*/, '').replace(/\s*·\s*\*\(.*?\)\*\s*$/, '').trim();
+      if (/^(Ước lượng|Nguồn|Thống kê|Sources)/i.test(h)) break;
+      chapter = h; continue;
+    }
+    if (/^(>|\*\[|\||-\s|---|```)/.test(l)) continue;
+    let who = 'Hóng', txt = l, isChar = false;
+    const m = l.match(/^\*\*(.+?):\*\*\s*(.*)$/);
+    if (m){ who = m[1].trim(); txt = m[2].trim(); isChar = !/^(Người dẫn|Hóng)$/i.test(who); if (!isChar) who = 'Hóng'; }
+    txt = txt.replace(/\s*·\s*nguồn:.*$/, '').trim();
+    if (!txt) continue;
+    n++;
+    const lineId = String(n).padStart(3, '0');
+    if (isChar && !withChars) continue;
+    const segs = unit === 'sent' ? splitSentences(txt) : [txt];
+    segs.forEach((s, i) => items.push({ id: segs.length > 1 ? lineId + '.' + (i + 1) : lineId, line: lineId, chapter, who, isChar, text: s }));
+  }
+  return { items, title };
+}
+
+function esc(s){ return s.replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c])); }
+function stateOf(id){ const e = EDITS[id]; if (!e) return 'todo'; if (e.cut) return 'cut'; return (e.text || '').trim() ? 'changed' : 'todo'; }
+
+function render(){
+  const list = $('#list');
+  if (!ITEMS.length){ list.innerHTML = '<div class="empty">Chưa có câu nào. Mở mục “Kịch bản đang sửa”, dán kịch bản rồi bấm <b>Nạp kịch bản này</b>.</div>'; updateProg(); return; }
+  let html = '', ch = null;
+  for (const it of ITEMS){
+    const st = stateOf(it.id);
+    if (FILTER === 'todo' && st !== 'todo') continue;
+    if (FILTER === 'done' && st === 'todo') continue;
+    if (it.chapter !== ch){ ch = it.chapter; html += `<h2 class="chapter">${esc(ch || 'Không tên chương')}</h2>`; }
+    const e = EDITS[it.id] || {};
+    html += `<article class="item ${st === 'changed' ? 'changed' : st === 'cut' ? 'cut' : ''}" data-id="${it.id}">
+      <div class="meta"><span class="id">${it.id}</span><span class="who ${it.isChar ? 'char' : ''}">${esc(it.who)}</span>
+        <span class="flag ${st === 'changed' ? 'c' : st === 'cut' ? 'x' : ''}">${st === 'changed' ? 'đã sửa' : st === 'cut' ? 'bỏ câu' : ''}</span></div>
+      <div class="orig">${esc(it.text)}</div>
+      <textarea class="re" id="re-${it.id}" rows="1" placeholder="Viết lại câu này (để trống = giữ nguyên)" ${e.cut ? 'disabled' : ''}>${esc(e.text || '')}</textarea>
+      <div class="row">
+        <button type="button" class="ghost" data-act="copy">Chép câu gốc vào ô</button>
+        <button type="button" class="ghost" data-act="cut">${e.cut ? 'Giữ lại câu' : 'Bỏ câu này'}</button>
+      </div>
+    </article>`;
+  }
+  list.innerHTML = html || '<div class="empty">Không có câu nào khớp bộ lọc.</div>';
+  list.querySelectorAll('.re').forEach(autoGrow);
+  updateProg();
+}
+
+function autoGrow(t){ t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+function save(){ store.set(STORE_NS + ':' + KEY, { edits: EDITS, note: $('#gnote').value }); }
+function updateProg(){
+  const total = ITEMS.length, ch = ITEMS.filter(i => stateOf(i.id) === 'changed').length, cut = ITEMS.filter(i => stateOf(i.id) === 'cut').length;
+  $('#prog').innerHTML = total ? `<b>${ch}</b> câu sửa · <b>${cut}</b> bỏ · ${total} câu` : '';
+}
+
+function load(text){
+  const unit = document.querySelector('input[name=unit]:checked').value, withChars = $('#optChars').checked;
+  const r = parse(text, unit, withChars); ITEMS = r.items; TITLE = r.title;
+  KEY = hash(text + '|' + unit + '|' + withChars);
+  const saved = store.get(STORE_NS + ':' + KEY) || {};
+  EDITS = saved.edits || {}; $('#gnote').value = saved.note || '';
+  store.set(STORE_NS + ':last', { text, unit, withChars, base: hash(SAMPLE) });
+  $('#srcInfo').textContent = (TITLE ? TITLE + ' · ' : '') + ITEMS.length + ' câu';
+  render();
+}
+
+function buildOut(fmt){
+  const lines = [];
+  if (fmt === 'diff'){
+    lines.push('SỬA LỜI' + (TITLE ? ' — ' + TITLE : ''));
+    const ch = ITEMS.filter(i => stateOf(i.id) !== 'todo');
+    lines.push(`(${ch.length} câu sửa/bỏ trên ${ITEMS.length} câu)`, '');
+    for (const it of ch){
+      const e = EDITS[it.id];
+      lines.push(`[${it.id}] (${it.who})`);
+      lines.push('cũ: ' + it.text);
+      lines.push(e.cut ? 'mới: (BỎ CÂU NÀY)' : 'mới: ' + e.text.trim());
+      lines.push('');
+    }
+  } else {
+    lines.push('KỊCH BẢN SAU KHI SỬA' + (TITLE ? ' — ' + TITLE : ''), '');
+    let ch = null, cur = null, buf = [];
+    const flush = () => { if (buf.length){ const w = cur.isChar ? cur.who + ': ' : ''; lines.push(`[${cur.line}] ${w}${buf.join(' ')}`); } buf = []; };
+    for (const it of ITEMS){
+      if (it.chapter !== ch){ flush(); ch = it.chapter; lines.push('', '## ' + (ch || '')); }
+      if (!cur || cur.line !== it.line){ flush(); cur = it; }
+      const e = EDITS[it.id];
+      if (e && e.cut) continue;
+      buf.push(e && (e.text || '').trim() ? e.text.trim() : it.text);
+    }
+    flush();
+  }
+  const note = $('#gnote').value.trim();
+  if (note) lines.push('', 'GHI CHÚ CHUNG: ' + note);
+  return lines.join('\n').trim();
+}
+
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 1800); }
+
+$('#list').addEventListener('input', e => {
+  const t = e.target; if (!t.classList.contains('re')) return;
+  const id = t.closest('.item').dataset.id; EDITS[id] = Object.assign(EDITS[id] || {}, { text: t.value });
+  autoGrow(t); save();
+  const art = t.closest('.item'), st = stateOf(id), fl = art.querySelector('.flag');
+  art.classList.toggle('changed', st === 'changed'); fl.className = 'flag ' + (st === 'changed' ? 'c' : ''); fl.textContent = st === 'changed' ? 'đã sửa' : '';
+  updateProg();
+});
+$('#list').addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]'); if (!b) return;
+  const art = b.closest('.item'), id = art.dataset.id, it = ITEMS.find(x => x.id === id);
+  if (b.dataset.act === 'copy'){ const t = art.querySelector('.re'); if (t.disabled) return; if (!t.value.trim()){ t.value = it.text; EDITS[id] = Object.assign(EDITS[id] || {}, { text: t.value }); save(); } t.focus(); autoGrow(t); render(); document.getElementById('re-' + id)?.focus(); }
+  if (b.dataset.act === 'cut'){ EDITS[id] = Object.assign(EDITS[id] || {}, { cut: !(EDITS[id] && EDITS[id].cut) }); save(); render(); }
+});
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+  FILTER = c.dataset.f; document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === c ? 'true' : 'false')); render();
+}));
+$('#btnLoad').addEventListener('click', () => { const v = $('#src').value.trim(); if (!v){ toast('Ô kịch bản đang trống'); return; } load(v); $('#pasteBox').open = false; toast('Đã nạp ' + ITEMS.length + ' câu'); });
+$('#btnSample').addEventListener('click', () => { $('#src').value = SAMPLE; });
+$('#gnote').addEventListener('input', save);
+$('#btnExport').addEventListener('click', () => { const f = document.querySelector('input[name=fmt]:checked').value; $('#out').value = buildOut(f); $('#dlg').showModal(); });
+document.querySelectorAll('input[name=fmt]').forEach(r => r.addEventListener('change', () => { $('#out').value = buildOut(r.value); }));
+$('#btnClose').addEventListener('click', () => $('#dlg').close());
+$('#btnCopy').addEventListener('click', () => {
+  const t = $('#out'), v = t.value;
+  const fallback = () => { t.focus(); t.select(); toast('Đã chọn sẵn, bấm Ctrl/Cmd + C để chép'); };
+  try { navigator.clipboard.writeText(v).then(() => toast('Đã chép, dán vào chat là xong'), fallback); } catch(e){ fallback(); }
+});
+
+// mở đầu: bản đang làm dở (nếu có) hoặc bản mẫu
+(function init(){
+  const last = store.get(STORE_NS + ':last');
+  const fresh = !last || !last.text || last.base !== hash(SAMPLE);   // kịch bản gốc đã đổi (build lại) → nạp bản mới
+  const text = fresh ? SAMPLE : last.text;
+  $('#src').value = text;
+  if (last && !fresh){ document.getElementById(last.unit === 'line' ? 'unitLine' : 'unitSent').checked = true; $('#optChars').checked = last.withChars !== false; }
+  load(text);
+})();
+</script>

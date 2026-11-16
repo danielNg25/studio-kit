@@ -1,0 +1,46 @@
+# Explainer địa chính trị, ngang 16:9 — YouTube, 15–25 phút, tiếng Việt (VBee), KHÔNG người dẫn. Kênh: channel-dia-chinh-tri.
+# Đo từ kênh mẫu (2026-10-09, storyboard RealLifeLore, CaspianReport, Dương Địa Lý, CD Media - Why? — channel-dia-chinh-tri/references/style/STYLE_NOTES.md):
+#   bản đồ 33–57% thời lượng (kênh mình: ≥ 55%, vì không có kho phim thật), đoạn bản đồ liền 20–60 s nhưng đổi trạng thái (zoom, tô, mũi tên, số) mỗi 3–5 s;
+#   ảnh thật giữ 3–6 s; vào bản đồ ngay giây 0, câu hỏi trong 5–10 s, tiêu đề trước 0:30, chương đầu 0:40–1:00.
+#   Research ngách (Project claude/research/dia-chinh-tri.md): video ≥ 30 phút ×1,72 so với < 12 phút ×1,13 ở kênh Việt; chọn 15–25 phút (cân công sức duyệt kịch bản).
+# ≥ 8:00 mới đặt được quảng cáo giữa video: https://support.google.com/youtube/answer/6175006
+id: geo-long
+size: [1920, 1080]
+fps: 24
+duration_s: [840, 1500]
+pauses: {sentence: 0.35, line: 0.45, shot: 0.4, chapter: 1.5}
+chars_per_second: 20          # VBee tốc độ ~1.0–1.1 — đo lại sau lần tạo giọng đầu tiên
+budget_chars: [15000, 27000]  # ≈ 14–25 phút với các khoảng nghỉ trên
+max_shot_s: 8                 # bản đồ được giữ lâu hơn bio-long, nhưng phải đổi trạng thái trong shot (QA cảnh báo shot > 8 s không có chuyển động)
+
+monetization:
+  midroll_min_s: 480
+  ad_breaks: {first_after_s: 180, min_gap_s: 240, last_before_end_s: 60, at: chapter}
+
+chapters:
+  required: true
+  first_title: "Mở đầu"
+  min_count: 4
+  min_len_s: 30
+
+beats:
+  - {name: hook,     seconds: [0, 45],     job: "bản đồ ngay giây 0; nghịch lý/câu hỏi trong 10 s; tiêu đề chữ trước 0:30; hứa điều người xem sẽ hiểu"}
+  - {name: context,  seconds: [45, 300],   job: "nền địa lý–lịch sử: khu vực trông thế nào, ai ở đâu, vì sao như vậy (bản đồ là chính)"}
+  - {name: problem,  seconds: [300, 720],  job: "'bài toán' cốt lõi: địa lý / dân số / điểm nghẽn / tài nguyên — số liệu có nguồn, so sánh trực quan"}
+  - {name: stakes,   seconds: [720, 1080], job: "tác động tới các cường quốc và Việt Nam ('Việt Nam đứng ở đâu')"}
+  - {name: future,   seconds: [1080, 1380],job: "các kịch bản tương lai — ghi rõ là kịch bản, nêu ai dự báo"}
+  - {name: outro,    seconds: [1380, 1500],job: "câu chốt trả lời câu hỏi mở đầu + gợi ý tập liên quan; không outro dài"}
+rules:
+  - "mỗi chương mở bằng shot `chapter:` (thẻ chương), cuối chương 1 câu móc"
+  - "bản đồ ≥ 55% thời lượng; ảnh public domain ≤ 30%; không slideshow ảnh, không chữ chạy"
+  - "mỗi tập ≥ 2 cảnh bản đồ thiết kế riêng cho câu chuyện (inauthentic content)"
+  - "khung có Việt Nam: Hoàng Sa + Trường Sa (Việt Nam), 'Biển Đông'; gọi World.assertLegal(svg)"
+  - "không kéo cho đủ thời lượng: thêm chi tiết thật có nguồn; > 25 phút thì tách 2 tập"
+
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null              # YouTube dùng SRT (`build.py … subs`)
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

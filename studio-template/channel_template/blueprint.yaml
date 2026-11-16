@@ -1,0 +1,52 @@
+# CHANNEL BLUEPRINT — the channel's rules. Every episode is built and checked against this file.
+name: "TÊN KÊNH"
+id: channel-id
+positioning: "kênh nói về gì, khác các kênh khác ở đâu (1-2 câu)"
+audience: "ai xem, bao nhiêu tuổi, xem ở đâu"
+language: vi
+platforms: [tiktok, facebook_reels]
+
+format: short-60            # templates/formats/<id>
+duration_s: [55, 65]
+style: doodle-v1            # packs/style/<id>
+narrator: stick-figure      # packs/characters/<id>   (stick-figure | shiba-punk | …)
+env_file: .env              # secrets (VBee keys); never commit/share
+output_dir: out             # finished videos of every episode → <channel>/out/
+
+tone:
+  persona: "người dẫn là ai, xưng hô thế nào"
+  humor: "kiểu đùa (so sánh đời thường, tự trào…) + 2-3 ví dụ đã duyệt"
+  banned_words: []          # QA fails if any appears in lines / stickers / title
+  replace: {}               # gợi ý thay thế cho người viết kịch bản
+
+script_formula:             # how every script is written (format beats are in format.yaml)
+  hook: "câu sốc/ngược đời ≤ 15 chữ, không mở bằng 'Xin chào'"
+  question: "câu hỏi của video = title_box"
+  points: "2-3 ý; mỗi ý: dựng → nói → cho thấy → câu đùa"
+  twist: "điều bất ngờ nhất, có số liệu"
+  payoff: "câu chốt + CTA"
+
+on_screen:
+  title_box: "luôn hiện; là câu hỏi của video; ≤ 2 dòng, ≤ 24 ký tự/dòng"
+  sticker: "1 nhãn mỗi ý, ≤ 6 chữ"
+  cta: "follow để xem thêm"
+
+facts:
+  rule: "mọi con số/khẳng định phải có claim + nguồn trong episode.yaml; bỏ số liệu không kiểm chứng được"
+  trusted_sources: []
+
+publishing:
+  when: "chỉ sau cổng 2 (video đã duyệt): viết post.caption + post.hashtags trong episode.yaml → build.py … post → post.md"
+  caption: "1-2 câu: câu hỏi của video + 1 chi tiết bất ngờ nhất, không kể hết câu trả lời"
+  caption_max: 300
+  hashtags: []               # hashtag chung của kênh, luôn đứng trước
+  episode_hashtags: "1-2 hashtag riêng theo chủ đề, ghi ở episode.yaml post.hashtags"
+  max_hashtags: 5
+  comment_mode: nguon        # comment ghim: nguon = danh sách nguồn kèm link | fact = 1 fact hay ho thêm, có nguồn (skill video-post-gen hỏi/nhận chế độ)
+  source_comment: {prefix: "Nguồn:"}
+  fact_prefix: "🧠 Fact thêm: "
+  support_line: "Thấy hay thì ủng hộ kênh bằng cách bấm vào link này nha 👉 {link}"   # chỉ thêm khi có link (Shopee…) truyền vào
+  source_names: {}           # domain -> tên hiển thị
+  cadence: "x video/tuần"
+
+kpis: [views_24h, completion_pct, shares, follows]

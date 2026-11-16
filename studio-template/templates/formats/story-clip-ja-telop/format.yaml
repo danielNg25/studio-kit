@@ -1,0 +1,27 @@
+# Bản thử cho ngách động vật (session dong-vat, 2026-10-06): telop (phụ đề chữ to) tự vẽ, đổi màu theo người nói, tô vàng từ nhấn mạnh.
+# Đặt tên -telop để không đè lên story-clip-ja của session khác.
+# Story clip, horizontal 16:9, JAPANESE — test clips for the Japanese animal channel (style test 2026-10-06).
+# Same pacing idea as story-clip, plus full-sentence テロップ (burned-in Japanese subtitles: viewers watch muted),
+# coloured by speaker (episode `cast:` names -> layout.telop.colors). Works with any style pack (raw SVG text, system font).
+id: story-clip-ja-telop
+size: [1920, 1080]
+fps: 24
+duration_s: [20, 90]
+duration_hard: false
+pauses: {sentence: 0.25, line: 0.3, shot: 0.35, chapter: 0.6}
+chars_per_second: 7.5          # Japanese ≈ 6–8 kana/kanji per second at normal speed — re-measure with the real voice
+budget_chars: [120, 700]
+max_shot_s: 8
+beats:
+  - {name: cold_open, seconds: [0, 6],   job: "tiểu phẩm: mèo gây chuyện, Shiba lãnh hậu quả — không chào hỏi"}
+  - {name: fact,      seconds: [6, 24],  job: "1 fact có nguồn, kể bằng hình (nghiên cứu → hệ quả)"}
+  - {name: punch,     seconds: [24, 32], job: "ボケ/ツッコミ chốt"}
+layout:
+  title_box: null
+  chapter_tag: null
+  sticker: null
+  subtitles: null              # the layout draws its own Japanese telop (runtime chunking splits on spaces = no good for Japanese)
+  telop: {y: 992, size: 62, max_chars: 22, font: "Noto Sans CJK JP", weight: 900, outline: "#101010", ow: 14,
+          colors: {shiba: "#FFFFFF", neko: "#FFB3D1", default: "#FFFFFF"}, emph: "#FFE14D"}
+  content: {zoom: 1.0, center_y: 540, floor_y: 960, push: 0.0}
+  safe_bottom: 1080

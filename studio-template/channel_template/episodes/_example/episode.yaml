@@ -1,0 +1,26 @@
+# EPISODE SPEC — one file per video. Copy this folder with new_episode.sh.
+id: example-episode
+status: idea                # idea → script-approved → voiced → rendered → posted
+format: short-60            # optional, defaults to blueprint.format
+title_box: "Câu hỏi của\nvideo ở đây?"
+source_ref: ""              # which reference/topic this came from
+# voice: {speed: 1.1}       # optional per-episode override
+# pronounce: {}             # optional extra pronunciations
+
+facts:                      # every number/claim used in the lines
+  - id: f1
+    claim: "khẳng định cần kiểm chứng"
+    source: "https://…"
+
+post:                       # viết SAU khi video được duyệt (cổng 2), rồi chạy: build.py … post  → post.md
+  caption: ""               # theo blueprint publishing.caption
+  hashtags: []              # 1-2 hashtag riêng của tập; hashtag chung lấy từ blueprint
+  cover_s: 1.5              # giây lấy làm ảnh bìa (tuỳ chọn)
+
+shots:                      # one shot = one visual idea; lines are spoken in order
+  - id: hook
+    lines: ["Câu hook gây sốc."]
+    template: narrator_talk
+    params: {bg: "card:cream", pose: shock, bubble: {text: "thật hả?", at: "sốc"}}
+    stickers: [{text: "câu sốc", at: "hook"}]
+    claims: []
