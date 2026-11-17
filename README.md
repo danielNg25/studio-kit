@@ -43,7 +43,13 @@ cd channel-example && python3 tools/studio_web.py
 # mở http://127.0.0.1:8765
 ```
 
-Trang tự đọc thư mục `episodes/<id>/`, gồm `outline.md`, `script.md`, `episode.yaml`, giọng VBee, ảnh soát, video, ảnh bìa và Shorts. Từ trang có thể:
+Tạo tập mới (đúng cấu trúc trang web cần, xem `channel-example/CAU_TRUC.md`):
+
+```bash
+cd channel-example && python3 tools/tao_tap.py xep-hang-cao-thu "Xếp Hạng Cao Thủ"
+```
+
+Trang tự hiện tab cho mọi thư mục `channel-<tên>/` có `episodes/`. Trang tự đọc thư mục `episodes/<id>/`, gồm `outline.md`, `script.md`, `episode.yaml`, giọng VBee, ảnh soát, video, ảnh bìa và Shorts. Từ trang có thể:
 - sửa kịch bản;
 - copy lời cho từng phần để thu trên web VBee;
 - đánh dấu tập đã duyệt hoặc đã đăng, và tích Shorts đã đăng;

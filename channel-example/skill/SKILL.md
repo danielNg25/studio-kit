@@ -39,7 +39,7 @@ Skill ngoài (`script-review`, `youtube-publish`, `video-post-gen`): nếu sessi
 
 ## Trang web studio (14/11/2026)
 Người dùng xem và sửa mọi thứ của tập trên trang `http://127.0.0.1:8765` (từ 14/11 tối: một trang cho mọi kênh, tab Kênh Mẫu và tab Hóng). Lệnh mở: `cd <STUDIO>/channel-example && python3 tools/studio_web.py`. Thiết kế ở `docs/2026-11-14-studio-web-design.md`.
-Trang tự đọc thư mục, không cần đăng ký. Nó chỉ thấy file đặt **đúng chỗ, đúng tên**:
+Trang tự đọc thư mục, không cần đăng ký. Nó chỉ thấy file đặt **đúng chỗ, đúng tên** — cây thư mục đầy đủ ở [`channel-example/CAU_TRUC.md`](../CAU_TRUC.md). **Tạo tập mới luôn bằng `python3 tools/tao_tap.py <id> "<tiêu đề>"`** (chép `episodes/_mau/`). **Không viết lại trang web**; cần thêm thì sửa `tools/studio_web.py` / `tools/studio_web/index.html`. Kênh mới = thư mục `<STUDIO>/channel-<tên>/` có `episodes/`, trang tự hiện tab.
 - `episodes/<id>/` gồm `outline.md`, `script.md`, `post.md`, `episode.yaml` (có `title:` và `status:`), `build/review_log.md`.
 - Bản chốt phải ghi vào đúng các tên trên, không để ở `script_v2.md` hay `outline.v5.md`. Bản cũ chuyển vào `_to_delete/`.
 - Video xem thử: `out/xem/<id>_*.mp4`. Bản thật: `out/<id>_bio-long.mp4` + `.vi.srt`.

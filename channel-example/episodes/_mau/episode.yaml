@@ -1,0 +1,20 @@
+# Thông tin tập. Trang web studio và Claude đọc file này. Tạo tập mới bằng: python3 tools/tao_tap.py <id> "<tiêu đề>"
+# 3 dòng đầu bắt buộc. status theo cổng: idea → outline (C0) → script (C1) → voice → build (C2–C5) → preview (C6) → approved → posted
+id: mau
+title: "<tiêu đề>"
+status: idea
+format: bio-long
+style: webtoon-svg
+voice:
+  speed: 0.95
+pronounce: {}          # cách đọc cho VBee, vd  Hạng S: Hạng ét
+music: {gain_db: -31, cues: []}
+# post: sinh ở bước bài đăng (skill youtube-publish)
+# shots: sinh từ script.md ở bước dựng — mỗi đoạn lời một shot; "chapter:" mở chương mới (trang web chia lời theo chương từ đây)
+shots:
+- id: c00_p01
+  chapter: Mở đầu
+  template: custom
+  params: {fn: s_c00_p01, bg: ''}
+  lines:
+  - 'Lời đọc của đoạn mở đầu.'

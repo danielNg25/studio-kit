@@ -19,6 +19,16 @@ CHANNELS = {   # thứ tự = thứ tự tab; thêm kênh mới: thêm một dò
     'rick-short': {'name': 'Người que 3D', 'root': os.path.join(os.path.dirname(STUDIO), 'rick-short'), 'kind': 'rick'},
 }
 CHANNELS = {k: v for k, v in CHANNELS.items() if k == 'example' or os.path.isdir(v['root'])}   # chỉ hiện kênh có thư mục
+for _d in sorted(os.listdir(STUDIO)):   # tự nhận mọi <STUDIO>/channel-<tên>/ có episodes/ (xem channel-example/CAU_TRUC.md)
+    _p = os.path.join(STUDIO, _d)
+    if not _d.startswith('channel-') or not os.path.isdir(os.path.join(_p, 'episodes')) or any(v['root'] == _p for v in CHANNELS.values()): continue
+    _name, _kind = _d[8:].replace('-', ' ').title(), 'yaml'
+    try:   # channel.yaml (tuỳ chọn):  name: "Tên tab"   web_kind: yaml|kit
+        for _l in open(os.path.join(_p, 'channel.yaml'), encoding='utf-8'):
+            if _l.startswith('name:'): _name = _l[5:].strip().strip('"\'') or _name
+            if _l.startswith('web_kind:'): _kind = _l[9:].strip() if _l[9:].strip() in ('yaml', 'kit') else _kind
+    except OSError: pass
+    CHANNELS[_d[8:]] = {'name': _name, 'root': _p, 'kind': _kind}
 
 
 class _Ctx(threading.local):

@@ -15,6 +15,7 @@ out/
 *.wav
 channel-*/episodes/*
 !channel-*/episodes/.gitkeep
+!channel-example/episodes/_mau/
 channel-*/branding/
 channel-*/STATUS.md
 channel-*/backlog.csv
