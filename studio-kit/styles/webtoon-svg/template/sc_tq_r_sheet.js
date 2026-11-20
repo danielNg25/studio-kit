@@ -1,0 +1,8 @@
+// Bảng duyệt nhân vật tập Cổ Long (C2): python3 build/job.py s_cl_sheet1 2 … (xem build/prev/nhan-vat-co-long-*.jpg)
+function clSheet(L, title, t) {
+  let s = `<rect width="1920" height="1080" fill="#EFE7D2"/>`;
+  L.forEach(([id, nm, ex], i) => { const x = (L.length > 10 ? 100 : 110) + i * (L.length > 10 ? 172 : 190); s += thC(id, { x, ground: 640, scale: 0.34, ex, shadow: true, legs: 'stand', hand: CHAR[id].hand || 'fist', arm: -40 }, t) + kIcon(id, x, 790, 80, ex === 'cold' ? 'neutral' : ex, t, { bg: '#D8CCB0' }) + kText(nm, x, 930, nm.length > 15 ? 18 : nm.length > 12 ? 21 : 26, { c: '#14080A' }); });
+  return thFin(s + kText(title, 960, 70, 36, { c: '#14080A' }));
+}
+EPISODE_SCENES.s_cl_sheet1 = (t) => clSheet([['cl_lth', 'Lý Tầm Hoan', 'calm'], ['cl_aphi', 'A Phi', 'fierce'], ['cl_lkv', 'Long Khiếu Vân', 'smug'], ['cl_lta', 'Lâm Thi Âm', 'calm'], ['cl_pht', 'Phó Hồng Tuyết', 'cold'], ['cl_dk', 'Diệp Khai', 'smile'], ['cl_slh', 'Sở Lưu Hương', 'smile'], ['cl_hth', 'Hồ Thiết Hoa', 'happy'], ['cl_cbn', 'Cơ Băng Nhạn', 'cold'], ['cl_tnn', 'Tiểu Ngư Nhi', 'smug']], 'NHÂN VẬT MỚI 1/2 · Vũ Trụ Kiếm Hiệp Cổ Long (chờ duyệt C2)', t);
+EPISODE_SCENES.s_cl_sheet2 = (t) => clSheet([['cl_hvk', 'Hoa Vô Khuyết', 'calm'], ['cl_ttnl', 'Tiêu Thập Nhất Lang', 'smug'], ['cl_ltb', 'Liên Thành Bích', 'smile'], ['cl_tbq', 'Thẩm Bích Quân', 'calm'], ['cl_thp', 'Tạ Hiểu Phong', 'calm'], ['cl_acat', 'A Cát', 'calm'], ['cl_ytt', 'Yến Thập Tam', 'fierce'], ['cl_ltp', 'Lục Tiểu Phụng', 'smile'], ['cl_tmxt', 'Tây Môn Xuy Tuyết', 'cold'], ['cl_hml', 'Hoa Mãn Lâu', 'smile'], ['cl_tktt', 'Tư Không Trích Tinh', 'smug']], 'NHÂN VẬT MỚI 2/2 · Vũ Trụ Kiếm Hiệp Cổ Long (chờ duyệt C2)', t);

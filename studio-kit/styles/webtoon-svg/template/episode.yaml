@@ -1,0 +1,14 @@
+# Tập mới tạo từ studio-kit/styles/webtoon-svg/template. Shot sinh lại từ script.md bằng: python3 build/gen_stub.py
+id: __ID__
+status: idea
+format: bio-long
+title: __TITLE__
+voice:
+  speed: 0.95
+shots:
+- id: c00_p01
+  chapter: Mở đầu
+  template: custom
+  params: {fn: s_c00_p01, bg: ''}
+  lines:
+  - Xin chào, đây là cảnh thử của bộ engine webtoon.

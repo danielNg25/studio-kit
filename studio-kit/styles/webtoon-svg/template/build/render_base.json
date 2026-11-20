@@ -1,0 +1,51 @@
+{
+ "W": 1920,
+ "H": 1080,
+ "fps": 30,
+ "timeline": {
+  "W": 1920,
+  "H": 1080,
+  "total": 1,
+  "silent": true,
+  "shots": []
+ },
+ "episode": {
+  "title_box": null,
+  "hook": "",
+  "shots": []
+ },
+ "layout": {
+  "title_box": null,
+  "chapter_tag": null,
+  "sticker": null,
+  "subtitles": null,
+  "content": {
+   "zoom": 1.0,
+   "center_y": 540,
+   "floor_y": 960,
+   "push": 0.0
+  },
+  "safe_bottom": 1080
+ },
+ "font": "file:///home/claude/studio/studio-template/packs/style/chibi-v1/PatrickHand-Regular.ttf",
+ "fontBase": "file:///home/claude/studio/studio-template/packs/style/chibi-v1/fonts/",
+ "scripts": [
+  "/home/claude/studio/studio-template/packs/style/cutout-v1/core.js",
+  "/home/claude/studio/studio-template/packs/style/cutout-v1/rt.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/texture.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/chibi.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/sets.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/anim.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/fx.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/props.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/scenes.js",
+  "/home/claude/studio/studio-template/templates/formats/bio-long/layout.js",
+  "/home/claude/studio/studio-template/packs/style/chibi-v1/glow.js",
+  "/home/claude/studio/studio-template/packs/style/webtoon-code-v1/fx.js",
+  "/home/claude/studio/studio-template/packs/style/webtoon-code-v1/fx_moves.js",
+  "/home/claude/studio/studio-template/packs/style/webtoon-code-v1/chars.js",
+  "/home/claude/studio/__EP__/build/scenes_dev_main.js"
+ ],
+ "colour": null,
+ "preload": []
+}

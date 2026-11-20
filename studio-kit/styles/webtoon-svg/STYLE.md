@@ -43,6 +43,7 @@ Theo kênh (giọng, nhạc, mức dB nằm ở skill kênh). Engine trộn bằ
 - Nhiều agent cùng chạy `sh mkscenes.sh` / cùng thư mục `build/prev/_st` sẽ ghi đè nhau → dùng `tools/dev_tag.sh` (mục Lệnh).
 
 ## Lệnh
+Tạo tập mới: `sh studio-kit/styles/webtoon-svg/new_episode.sh <kênh> <id> "<tiêu đề>"` (chép `template/`: đồ nghề cảnh + script build). Cài đặt, tạo nhân vật, mang sang máy khác: `INSTALL.md`.
 Chạy trong thư mục tập `channel-<kênh>/episodes/<id>/` (engine: `../../../studio-template/engine/`).
 | Việc | Lệnh |
 |---|---|
